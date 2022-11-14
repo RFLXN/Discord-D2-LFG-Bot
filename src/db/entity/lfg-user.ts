@@ -4,7 +4,7 @@ import {
 import { JoinColumn } from "typeorm/browser";
 import { LongTermLfg, NormalLfg, RegularLfg } from "./lfg";
 
-@Check("\"STATE\" = 'JOIN' OR \"STATE\" = 'ALTER'")
+@Check("\"STATE\" = 'JOIN' OR \"STATE\" = 'ALTER'  OR \"STATE\" = 'CREATOR'")
 class LfgUser {
     @PrimaryGeneratedColumn("increment", { name: "ID" })
         id!: number;
@@ -35,7 +35,7 @@ class LfgUser {
         type: "text",
         nullable: false
     })
-        state!: "JOIN" | "ALTER";
+        state!: "JOIN" | "ALTER" | "CREATOR";
 
     @Column({
         name: "STATE_CHANGE_RAW_TIMESTAMP",

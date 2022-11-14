@@ -18,6 +18,8 @@ interface LfgEventHandlers {
     GET_REGULAR_LFG: [lfg: RegularLfg];
 }
 
+type LfgEventHandler<K extends keyof LfgEventHandlers> = (...args: LfgEventHandlers[K]) => void;
+
 class LfgManager extends EventEmitter {
     private static readonly singleton = new LfgManager();
 
@@ -43,7 +45,7 @@ class LfgManager extends EventEmitter {
         console.log("Successfully Loaded All LFG.");
     }
 
-    public on<K extends keyof LfgEventHandlers>(eventName: K, listener: (...args: LfgEventHandlers[K]) => void): this {
+    public on<K extends keyof LfgEventHandlers>(eventName: K, listener: LfgEventHandler<K>): this {
         return super.on(eventName, listener as (...args: any[]) => void);
     }
 
