@@ -1,0 +1,41 @@
+{
+  "default": {
+    "activityCreateSelectionTitle": "Create Looking-For-Group",
+    "activityEditSelectionTitle": "Edit Looking-For-Group",
+    "activitySelectionDescription": "Select Activity",
+    "activitySelectMenuPlaceholder": "Select Activity from Here",
+    "modalCreateTitle": "Create Looking-For-Group",
+    "modalEditTitle": "Edit Looking-For-Group",
+    "modalDescriptionInput": "Description",
+    "modalDateInput": "Datetime",
+    "modalDateInputDescription": "Format: \"YYYY-MM-DD HH:mm\" or \"now\"\nExample: 2022-12-25 20:30",
+    "waitingLfgCreationMessage": "Creating Looking-For-Group. Please Wait.",
+    "lfgCreationCompleteMessage": "Looking-For-Group Created."
+  },
+  "ko": {
+    "activityCreateSelectionTitle": "파티모집 생성",
+    "activityEditSelectionTitle": "파티모집 수정",
+    "activitySelectionDescription": "활동을 선택해주세요",
+    "activitySelectMenuPlaceholder": "이곳에서 활동을 선택해주세요",
+    "modalCreateTitle": "파티모집 생성",
+    "modalEditTitle": "파티모집 수정",
+    "modalDescriptionInput": "설명 (Description)",
+    "modalDateInput": "일시 (Datetime)",
+    "modalDateInputDescription": "형식: \"YYYY-MM-DD HH:mm\" 혹은 \"now\"\n예제: 2022-12-25 20:30",
+    "waitingLfgCreationMessage": "파티모집을 생성중입니다. 잠시만 기다려주세요.",
+    "lfgCreationCompleteMessage": "파티모집이 생성되었습니다."
+  },
+  "ja": {
+    "activityCreateSelectionTitle": "パーティ募集作成",
+    "activityEditSelectionTitle": "パーティ募集修正",
+    "activitySelectionDescription": "活動を選んでください",
+    "activitySelectMenuPlaceholder": "こちから活動を選んでください",
+    "modalCreateTitle": "パーティ募集作成",
+    "modalEditTitle": "パーティ募集修正",
+    "modalDescriptionInput": "説明 (Description)",
+    "modalDateInput": "日時 (Datetime)",
+    "modalDateInputDescription": "形式: \"YYYY-MM-DD HH:mm\"または\"now\"\n例: 2022-12-25 20:30",
+    "waitingLfgCreationMessage": "パーティ募集を作成中です。少しお待ちください。",
+    "lfgCreationCompleteMessage": "パーティ募集を作成しました。"
+  }
+}

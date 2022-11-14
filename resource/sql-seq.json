@@ -1,0 +1,10 @@
+[
+  "bot-admin.sql",
+  "regular-lfg-starter.sql",
+  "normal-lfg.sql",
+  "long-term-lfg.sql",
+  "regular-lfg.sql",
+  "normal-lfg-user.sql",
+  "long-term-lfg-user.sql",
+  "regular-lfg-user.sql"
+]

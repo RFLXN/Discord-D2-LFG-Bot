@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Strike",
+    "localizationName": {
+      "ko": "공격전",
+      "ja": "ストライク"
+    }
+  },
+  {
+    "name": "Nightfall",
+    "localizationName": {
+      "ko": "황혼전",
+      "ja": "ナイトフォール"
+    }
+  },
+  {
+    "name": "Gambit",
+    "localizationName": {
+      "ko": "갬빗",
+      "ja": "ギャンビット"
+    }
+  },
+  {
+    "name": "Crucible",
+    "localizationName": {
+      "ko": "시련의 장",
+      "ja": "クルーシブル"
+    }
+  },
+  {
+    "name": "Seasonal Activity",
+    "localizationName": {
+      "ko": "시즌 활동",
+      "ja": "シーズナル活動"
+    }
+  },
+  {
+    "name": "Exotic Quest",
+    "localizationName": {
+      "ko": "경이 퀘스트",
+      "ja": "エキゾチッククエスト"
+    }
+  },
+  {
+    "name": "Raid - Last Wish",
+    "localizationName": {
+      "ko": "레이드 - 마지막 소원",
+      "ja": "レイド - 最後の望み"
+    }
+  },
+  {
+    "name": "Raid - Garden of Salvation",
+    "localizationName": {
+      "ko": "레이드 - 구원의 정원",
+      "ja": "レイド - 救済の庭園"
+    }
+  },
+  {
+    "name": "Raid - Deep Stone Crypt",
+    "localizationName": {
+      "ko": "레이드 - 딥스톤 무덤",
+      "ja": "レイド - ディープストーン・クリプト"
+    }
+  },
+  {
+    "name": "Raid - Vault of Glass",
+    "localizationName": {
+      "ko": "레이드 - 유리 금고",
+      "ja": "レイド - ガラスの間"
+    }
+  },
+  {
+    "name": "Raid - Vow of Disciple",
+    "localizationName": {
+      "ko": "레이드 - 신봉자의 서약",
+      "ja": "レイド - 門弟の誓い"
+    }
+  },
+  {
+    "name": "Raid - King's Fall",
+    "localizationName": {
+      "ko": "레이드 - 왕의 몰락",
+      "ja": "レイド - 邪神、滅びる"
+    }
+  }
+]

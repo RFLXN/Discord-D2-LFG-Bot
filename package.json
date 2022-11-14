@@ -1,0 +1,35 @@
+{
+  "name": "destiny2-discord-lfg-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "discord-api-types": "^0.37.7",
+    "discord.js": "^14.6.0",
+    "jsonschema": "^1.4.1",
+    "moment": "^2.29.4",
+    "sqlite3": "^5.1.2",
+    "typeorm": "^0.3.10"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "clear-dist": "node clear-dist.js",
+    "build": "tsc",
+    "prebuild": "yarn run lint:fix && yarn run clear-dist",
+    "start": "node --experimental-specifier-resolution=node ./dist/main.js",
+    "prestart": "yarn run build",
+    "test": "node --experimental-specifier-resolution=node ./dist/test.js",
+    "pretest": "yarn run build"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "8.22.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "typescript": "^4.8.2"
+  }
+}
