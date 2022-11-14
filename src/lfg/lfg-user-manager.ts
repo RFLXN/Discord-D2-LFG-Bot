@@ -1,7 +1,23 @@
+import { EventEmitter } from "events";
 import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "../db/entity/lfg-user";
 import { getRepository } from "../db/typeorm";
 
-class LfgUserManager {
+interface LfgUserEventHandlers {
+    NORMAL_LFG_CREATOR: [user: NormalLfgUser];
+    NORMAL_LFG_JOIN: [user: NormalLfgUser];
+    NORMAL_LFG_ALTER: [user: NormalLfgUser];
+    NORMAL_LFG_LEAVE: [lfgID: number, userID: string];
+    LONG_TERM_LFG_CREATOR: [user: LongTermLfgUser];
+    LONG_TERM_LFG_JOIN: [user: LongTermLfgUser];
+    LONG_TERM_LFG_ALTER: [user: LongTermLfgUser];
+    LONG_TERM_LFG_LEAVE: [lfgID: number, userID: string];
+    REGULAR_LFG_CREATOR: [user: RegularLfgUser];
+    REGULAR_LFG_JOIN: [user: RegularLfgUser];
+    REGULAR_LFG_ALTER: [user: RegularLfgUser];
+    REGULAR_LFG_LEAVE: [lfgID: number, userID: string];
+}
+
+class LfgUserManager extends EventEmitter {
     private static singleton = new LfgUserManager();
 
     private normalLfgUsers: NormalLfgUser[] = [];
@@ -11,6 +27,7 @@ class LfgUserManager {
     private regularLfgUsers: RegularLfgUser[] = [];
 
     private constructor() {
+        super();
     }
 
     public static get instance() {
@@ -18,9 +35,11 @@ class LfgUserManager {
     }
 
     public async loadUsers() {
+        console.log("Loading All LFG Users...");
         await this.loadNormalUsers();
         await this.loadLongTermUsers();
         await this.loadRegularUsers();
+        console.log("LFG Users Loaded.");
     }
 
     public getNormalUsers(id: number): NormalLfgUser[] {
@@ -62,3 +81,7 @@ class LfgUserManager {
         console.log(`Regular LFG Users Loaded. Every '${this.regularLfgUsers.length}' Users.`);
     }
 }
+
+export {
+    LfgUserManager
+};
