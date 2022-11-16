@@ -10,7 +10,8 @@
     "modalDateInput": "Datetime",
     "modalDateInputDescription": "Format: \"YYYY-MM-DD HH:mm\" or \"now\"\nExample: 2022-12-25 20:30",
     "waitingLfgCreationMessage": "Creating Looking-For-Group. Please Wait.",
-    "lfgCreationCompleteMessage": "Looking-For-Group Created."
+    "lfgCreationCompleteMessage": "Looking-For-Group Created.",
+    "needInitLfgServerConfig": "Need Initialize LFG Server Configs. Pleas Call Server Administrator."
   },
   "ko": {
     "activityCreateSelectionTitle": "파티모집 생성",
@@ -23,7 +24,8 @@
     "modalDateInput": "일시 (Datetime)",
     "modalDateInputDescription": "형식: \"YYYY-MM-DD HH:mm\" 혹은 \"now\"\n예제: 2022-12-25 20:30",
     "waitingLfgCreationMessage": "파티모집을 생성중입니다. 잠시만 기다려주세요.",
-    "lfgCreationCompleteMessage": "파티모집이 생성되었습니다."
+    "lfgCreationCompleteMessage": "파티모집이 생성되었습니다.",
+    "needInitLfgServerConfig": "서버 파티모집 컨픽이 설정돼지 않았습니다. 서버 관리자를 불러주세요."
   },
   "ja": {
     "activityCreateSelectionTitle": "パーティ募集作成",
@@ -36,6 +38,7 @@
     "modalDateInput": "日時 (Datetime)",
     "modalDateInputDescription": "形式: \"YYYY-MM-DD HH:mm\"または\"now\"\n例: 2022-12-25 20:30",
     "waitingLfgCreationMessage": "パーティ募集を作成中です。少しお待ちください。",
-    "lfgCreationCompleteMessage": "パーティ募集を作成しました。"
+    "lfgCreationCompleteMessage": "パーティ募集を作成しました。",
+    "needInitLfgServerConfig": "サーバーのパーティ募集コンフィグが設定されていません。サーバー管理者を読んでください。"
   }
 }

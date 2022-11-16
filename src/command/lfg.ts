@@ -3,6 +3,9 @@ import { ApplicationCommandOptionType } from "discord-api-types/v10";
 import normalLfgExecutors from "./lfg/normal-lfg";
 import longTermLfgExecutors from "./lfg/long-term-lfg";
 import regularLfgExecutors from "./lfg/regular-lfg";
+import { getLfgServerConfig } from "../lfg/server-config";
+import { getLocalizedString } from "../lfg/locale-map";
+import { getLocale } from "./lfg/share";
 
 const normalLfg: ChatInputApplicationCommandData = {
     name: "lfg",
@@ -342,14 +345,35 @@ const doSubCommand = async (interaction: ChatInputCommandInteraction, executor: 
 };
 
 const doNormalLfg = async (interaction: ChatInputCommandInteraction) => {
+    const guildLfgConfig = await getLfgServerConfig(interaction.guild.id);
+    if (!guildLfgConfig || !guildLfgConfig.normalLfgThreadChannel
+        || !guildLfgConfig.normalLfgListChannel) {
+        return interaction.reply({
+            content: getLocalizedString(getLocale(interaction.locale), "needInitLfgServerConfig")
+        });
+    }
     await doSubCommand(interaction, normalLfgExecutors);
 };
 
 const doLongTermLfg = async (interaction: ChatInputCommandInteraction) => {
+    const guildLfgConfig = await getLfgServerConfig(interaction.guild.id);
+    if (!guildLfgConfig || !guildLfgConfig.longTermLfgListChannel
+        || !guildLfgConfig.longTermLfgThreadChannel) {
+        return interaction.reply({
+            content: getLocalizedString(getLocale(interaction.locale), "needInitLfgServerConfig")
+        });
+    }
     await doSubCommand(interaction, longTermLfgExecutors);
 };
 
 const doRegularLfg = async (interaction: ChatInputCommandInteraction) => {
+    const guildLfgConfig = await getLfgServerConfig(interaction.guild.id);
+    if (!guildLfgConfig || !guildLfgConfig.regularLfgListChannel
+        || !guildLfgConfig.regularLfgThreadChannel) {
+        return interaction.reply({
+            content: getLocalizedString(getLocale(interaction.locale), "needInitLfgServerConfig")
+        });
+    }
     await doSubCommand(interaction, regularLfgExecutors);
 };
 
