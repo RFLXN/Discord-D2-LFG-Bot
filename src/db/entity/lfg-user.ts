@@ -1,7 +1,6 @@
 import {
-    Check, Column, Entity, ManyToOne, PrimaryGeneratedColumn
+    Check, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation
 } from "typeorm";
-import { JoinColumn } from "typeorm/browser";
 import { LongTermLfg, NormalLfg, RegularLfg } from "./lfg";
 
 @Check("\"STATE\" = 'JOIN' OR \"STATE\" = 'ALTER'  OR \"STATE\" = 'CREATOR'")
@@ -58,9 +57,9 @@ class NormalLfgUser extends LfgUser {
     )
     @JoinColumn({
         name: "LFG_ID",
-        referencedColumnName: "ID"
+        referencedColumnName: "id"
     })
-        lfg!: NormalLfg;
+        lfg!: Relation<NormalLfg>;
 }
 
 @Entity({ name: "LONG_TERM_LFG_USER" })
@@ -72,9 +71,9 @@ class LongTermLfgUser extends LfgUser {
     )
     @JoinColumn({
         name: "LFG_ID",
-        referencedColumnName: "ID"
+        referencedColumnName: "id"
     })
-        lfg!: LongTermLfg;
+        lfg!: Relation<LongTermLfg>;
 }
 
 @Entity({ name: "REGULAR_LFG_USER" })
@@ -86,9 +85,9 @@ class RegularLfgUser extends LfgUser {
     )
     @JoinColumn({
         name: "LFG_ID",
-        referencedColumnName: "ID"
+        referencedColumnName: "id"
     })
-        lfg!: RegularLfg;
+        lfg!: Relation<RegularLfg>;
 }
 
 export { NormalLfgUser, LongTermLfgUser, RegularLfgUser };

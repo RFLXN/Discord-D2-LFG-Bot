@@ -60,7 +60,8 @@
     ],
     "no-async-promise-executor": "off",
     "class-methods-use-this": "off",
-    "implicit-arrow-linebreak": "off"
+    "implicit-arrow-linebreak": "off",
+    "import/no-cycle": "off"
   },
   "env": {
     "node": true

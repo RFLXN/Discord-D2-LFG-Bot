@@ -9,6 +9,7 @@ import AdminCommand from "../type/AdminCommand";
 import { addStarter, deleteStarter } from "../lfg/regular-lfg-starter";
 import { overrideGuildCommands } from "../command-rest-api";
 import client, { rest } from "../main";
+import { addServerConfig } from "../lfg/server-config";
 
 const serverAdminCommands: AdminCommand[] = [
     {
@@ -66,6 +67,125 @@ const serverAdminCommands: AdminCommand[] = [
             return {
                 success: true,
                 msg: "Clearing Guild Commands..."
+            };
+        }
+    },
+    {
+        name: "Set LFG Configs - Normal LFG Thread Channel ID",
+        exec: (interaction: ChatInputCommandInteraction, value?: string) => {
+            if (!value) {
+                return {
+                    success: false,
+                    msg: "Need Value: Normal LFG Thread Channel ID"
+                };
+            }
+
+            addServerConfig(interaction.guild.id, { normalLfgThreadChannel: value });
+            return {
+                success: true,
+                msg: `Set Normal LFG Thread Channel ID: ${value}`
+            };
+        }
+    },
+    {
+        name: "Set LFG Configs - Normal LFG List Channel ID",
+        exec: (interaction: ChatInputCommandInteraction, value?: string) => {
+            if (!value) {
+                return {
+                    success: false,
+                    msg: "Need Value: Normal LFG List Channel ID"
+                };
+            }
+
+            addServerConfig(interaction.guild.id, { normalLfgListChannel: value });
+            return {
+                success: true,
+                msg: `Set Normal LFG List Channel ID: ${value}`
+            };
+        }
+    },
+    {
+        name: "Set LFG Configs - Long-Term LFG Thread Channel ID",
+        exec: (interaction: ChatInputCommandInteraction, value?: string) => {
+            if (!value) {
+                return {
+                    success: false,
+                    msg: "Need Value: Long-Term LFG Thread Channel ID"
+                };
+            }
+
+            addServerConfig(interaction.guild.id, { longTermLfgThreadChannel: value });
+            return {
+                success: true,
+                msg: `Set Long-Term LFG Thread Channel ID: ${value}`
+            };
+        }
+    },
+    {
+        name: "Set LFG Configs - Long-Term LFG List Channel ID",
+        exec: (interaction: ChatInputCommandInteraction, value?: string) => {
+            if (!value) {
+                return {
+                    success: false,
+                    msg: "Need Value: Long-Term LFG List Channel ID"
+                };
+            }
+
+            addServerConfig(interaction.guild.id, { longTermLfgListChannel: value });
+            return {
+                success: true,
+                msg: `Set Long-Term LFG List Channel ID: ${value}`
+            };
+        }
+    },
+    {
+        name: "Set LFG Configs - Regular LFG Thread Channel ID",
+        exec: (interaction: ChatInputCommandInteraction, value?: string) => {
+            if (!value) {
+                return {
+                    success: false,
+                    msg: "Need Value: Regular LFG Thread Channel ID"
+                };
+            }
+
+            addServerConfig(interaction.guild.id, { regularLfgThreadChannel: value });
+            return {
+                success: true,
+                msg: `Set Regular LFG Thread Channel ID: ${value}`
+            };
+        }
+    },
+    {
+        name: "Set LFG Configs - Regular LFG List Channel ID",
+        exec: (interaction: ChatInputCommandInteraction, value?: string) => {
+            if (!value) {
+                return {
+                    success: false,
+                    msg: "Need Value: Regular LFG List Channel ID"
+                };
+            }
+
+            addServerConfig(interaction.guild.id, { regularLfgListChannel: value });
+            return {
+                success: true,
+                msg: `Set Regular LFG List Channel ID: ${value}`
+            };
+        }
+    },
+    {
+        name: "Set LFG Configs - Expired LFG Delete Delay",
+        exec: (interaction: ChatInputCommandInteraction, value?: string) => {
+            if (!value) {
+                return {
+                    success: false,
+                    msg: "Need Value: Expired LFG Delete Delay (ms)"
+                };
+            }
+
+            addServerConfig(interaction.guild.id, { expiredLfgDeleteDelay: Number(value) });
+            return {
+                success: true,
+                msg: `Set Expired LFG Delete Delay: ${value}`
             };
         }
     }

@@ -53,7 +53,12 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
         fetchReply: true
     });
 
-    const createdLfg = await LfgManager.instance.createNormalLfg(interaction.user.id, {
+    const createdLfg = await LfgManager.instance.createNormalLfg({
+        guildID: interaction.guild.id,
+        userID: interaction.user.id,
+        userName: interaction.user.username,
+        userTag: interaction.user.tag
+    }, {
         activityName: activityAwaited.values[0],
         date,
         description,

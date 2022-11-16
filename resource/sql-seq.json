@@ -1,5 +1,6 @@
 [
   "bot-admin.sql",
+  "server-lfg-config.sql",
   "regular-lfg-starter.sql",
   "normal-lfg.sql",
   "long-term-lfg.sql",

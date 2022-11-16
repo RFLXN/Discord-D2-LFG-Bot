@@ -1,12 +1,17 @@
-import { EventEmitter } from "events";
-import { LongTermLfgCreateOption, NormalLfgCreateOption, RegularLfgCreateOption } from "../type/LfgCreateOption";
+import {
+    LfgCreator,
+    LongTermLfgCreateOption,
+    NormalLfgCreateOption,
+    RegularLfgCreateOption
+} from "../type/LfgCreateOption";
 import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
 import { getQueryBuilder, getRepository } from "../db/typeorm";
+import { EventTypes, TypedEventEmitter } from "../util/event-emitter";
 
-interface LfgEventHandlers {
-    NEW_NORMAL_LFG: [creator: string, lfg: NormalLfg];
-    NEW_LONG_TERM_LFG: [creator: string, lfg: LongTermLfg];
-    NEW_REGULAR_LFG: [creator: string, lfg: RegularLfg];
+interface LfgEvents extends EventTypes {
+    NEW_NORMAL_LFG: [creator: LfgCreator, lfg: NormalLfg];
+    NEW_LONG_TERM_LFG: [creator: LfgCreator, lfg: LongTermLfg];
+    NEW_REGULAR_LFG: [creator: LfgCreator, lfg: RegularLfg];
     DELETE_NORMAL_LFG: [id: number];
     DELETE_LONG_TERM_LFG: [id: number];
     DELETE_REGULAR_LFG: [id: number];
@@ -18,9 +23,7 @@ interface LfgEventHandlers {
     GET_REGULAR_LFG: [lfg: RegularLfg];
 }
 
-type LfgEventHandler<K extends keyof LfgEventHandlers> = (...args: LfgEventHandlers[K]) => void;
-
-class LfgManager extends EventEmitter {
+class LfgManager extends TypedEventEmitter<LfgEvents> {
     private static readonly singleton = new LfgManager();
 
     private normalLfg: NormalLfg[] = [];
@@ -45,15 +48,7 @@ class LfgManager extends EventEmitter {
         console.log("Successfully Loaded All LFG.");
     }
 
-    public on<K extends keyof LfgEventHandlers>(eventName: K, listener: LfgEventHandler<K>): this {
-        return super.on(eventName, listener as (...args: any[]) => void);
-    }
-
-    public emit<K extends keyof LfgEventHandlers>(eventName: K, ...args: LfgEventHandlers[K]): boolean {
-        return super.emit(eventName, args);
-    }
-
-    public async createNormalLfg(creatorId: string, option: NormalLfgCreateOption): Promise<NormalLfg> {
+    public async createNormalLfg(creator: LfgCreator, option: NormalLfgCreateOption): Promise<NormalLfg> {
         const result = await getQueryBuilder()
             .insert()
             .into(NormalLfg)
@@ -70,11 +65,11 @@ class LfgManager extends EventEmitter {
 
         this.normalLfg.push(created);
 
-        this.emit("NEW_NORMAL_LFG", creatorId, created);
+        this.typedEmit("NEW_NORMAL_LFG", creator, created);
         return created;
     }
 
-    public async createLongTermLfg(creatorId: string, option: LongTermLfgCreateOption): Promise<LongTermLfg> {
+    public async createLongTermLfg(creator: LfgCreator, option: LongTermLfgCreateOption): Promise<LongTermLfg> {
         const result = await getQueryBuilder()
             .insert()
             .into(LongTermLfg)
@@ -91,11 +86,11 @@ class LfgManager extends EventEmitter {
 
         this.longTermLfg.push(created);
 
-        this.emit("NEW_LONG_TERM_LFG", creatorId, created);
+        this.typedEmit("NEW_LONG_TERM_LFG", creator, created);
         return created;
     }
 
-    public async createRegularLfg(creatorId: string, option: RegularLfgCreateOption): Promise<RegularLfg> {
+    public async createRegularLfg(creator: LfgCreator, option: RegularLfgCreateOption): Promise<RegularLfg> {
         const result = await getQueryBuilder()
             .insert()
             .into(RegularLfg)
@@ -111,7 +106,7 @@ class LfgManager extends EventEmitter {
 
         this.regularLfg.push(created);
 
-        this.emit("NEW_REGULAR_LFG", creatorId, created);
+        this.typedEmit("NEW_REGULAR_LFG", creator, created);
         return created;
     }
 
@@ -125,7 +120,7 @@ class LfgManager extends EventEmitter {
 
         this.deleteNormalLfgFromDB(id);
 
-        this.emit("DELETE_NORMAL_LFG", id);
+        this.typedEmit("DELETE_NORMAL_LFG", id);
 
         return true;
     }
@@ -141,7 +136,7 @@ class LfgManager extends EventEmitter {
 
         this.deleteLongTermLfgFromDB(id);
 
-        this.emit("DELETE_LONG_TERM_LFG", id);
+        this.typedEmit("DELETE_LONG_TERM_LFG", id);
         return true;
     }
 
@@ -156,7 +151,7 @@ class LfgManager extends EventEmitter {
 
         this.deleteRegularLfgFromDB(id);
 
-        this.emit("DELETE_REGULAR_LFG", id);
+        this.typedEmit("DELETE_REGULAR_LFG", id);
         return true;
     }
 
@@ -179,7 +174,7 @@ class LfgManager extends EventEmitter {
 
         this.editNormalLfgFromDB(id, option);
 
-        this.emit("EDIT_NORMAL_LFG", this.normalLfg[idx]);
+        this.typedEmit("EDIT_NORMAL_LFG", this.normalLfg[idx]);
 
         return true;
     }
@@ -203,7 +198,7 @@ class LfgManager extends EventEmitter {
 
         this.editLongTermLfgFromDB(id, option);
 
-        this.emit("EDIT_LONG_TERM_LFG", this.longTermLfg[idx]);
+        this.typedEmit("EDIT_LONG_TERM_LFG", this.longTermLfg[idx]);
 
         return true;
     }
@@ -223,26 +218,26 @@ class LfgManager extends EventEmitter {
 
         this.editRegularLfgFromDB(id, option);
 
-        this.emit("EDIT_REGULAR_LFG", this.regularLfg[idx]);
+        this.typedEmit("EDIT_REGULAR_LFG", this.regularLfg[idx]);
 
         return true;
     }
 
     public getNormalLfg(id: number): NormalLfg | undefined {
         const found = this.normalLfg.find((lfg) => lfg.id == id);
-        this.emit("GET_NORMAL_LFG", found);
+        this.typedEmit("GET_NORMAL_LFG", found);
         return found;
     }
 
     public getLongTermLfg(id: number): LongTermLfg | undefined {
         const found = this.longTermLfg.find((lfg) => lfg.id == id);
-        this.emit("GET_LONG_TERM_LFG", found);
+        this.typedEmit("GET_LONG_TERM_LFG", found);
         return found;
     }
 
     public getRegularLfg(id: number): RegularLfg | undefined {
         const found = this.regularLfg.find((lfg) => lfg.id == id);
-        this.emit("GET_REGULAR_LFG", found);
+        this.typedEmit("GET_REGULAR_LFG", found);
         return found;
     }
 
@@ -291,16 +286,28 @@ class LfgManager extends EventEmitter {
             .execute();
     }
 
-    private async editNormalLfgFromDB(id: number, options: Partial<Omit<NormalLfg, "guildID">>) {
-
+    private async editNormalLfgFromDB(id: number, options: Partial<Omit<NormalLfg, "guildID" | "id">>) {
+        await getQueryBuilder(NormalLfg)
+            .update()
+            .set({ ...options })
+            .where("ID = :id", { id })
+            .execute();
     }
 
-    private async editLongTermLfgFromDB(id: number, options: Partial<Omit<LongTermLfg, "guildID">>) {
-
+    private async editLongTermLfgFromDB(id: number, options: Partial<Omit<LongTermLfg, "guildID" | "id">>) {
+        await getQueryBuilder(LongTermLfg)
+            .update()
+            .set({ ...options })
+            .where("ID = :id", { id })
+            .execute();
     }
 
-    private async editRegularLfgFromDB(id: number, options: Partial<Omit<RegularLfg, "guildID">>) {
-
+    private async editRegularLfgFromDB(id: number, options: Partial<Omit<RegularLfg, "guildID" | "id">>) {
+        await getQueryBuilder(RegularLfg)
+            .update()
+            .set({ ...options })
+            .where("ID = :id", { id })
+            .execute();
     }
 
     private async loadAllNormalLfg() {
@@ -328,4 +335,4 @@ class LfgManager extends EventEmitter {
     }
 }
 
-export { LfgManager, LfgEventHandlers };
+export { LfgManager, LfgEvents };

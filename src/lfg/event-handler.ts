@@ -1,11 +1,32 @@
+import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
+import { LfgCreator } from "../type/LfgCreateOption";
+import { LfgUserManager } from "./lfg-user-manager";
 import { LfgManager } from "./lfg-manager";
-import { NormalLfg } from "../db/entity/lfg";
 
-const appleLfgEventHandlers = () => {
-    LfgManager.instance.on("NEW_NORMAL_LFG", async (creator: string, lfg: NormalLfg) => {
-
-        // TODO: IMPLEMENT LOG THREAD CREATION AND LFG LIST APPLY
+const newNormalLfgHandler = async (creator: LfgCreator, lfg: NormalLfg) => {
+    const userManager = LfgUserManager.instance;
+    await userManager.newNormalCreator({
+        lfgID: lfg.id,
+        ...creator
+    });
+    await userManager.joinNormalUser({
+        lfgID: lfg.id,
+        ...creator
     });
 };
 
-export default appleLfgEventHandlers;
+const newLongTermLfgHandler = async (creator: LfgCreator, lfg: LongTermLfg) => {
+
+};
+
+const newRegularLfgHandler = async (creator: LfgCreator, lfg: RegularLfg) => {
+
+};
+
+const applyEventHandlers = () => {
+    LfgManager.instance.typedOn("NEW_NORMAL_LFG", newNormalLfgHandler);
+    LfgManager.instance.typedOn("NEW_LONG_TERM_LFG", newLongTermLfgHandler);
+    LfgManager.instance.typedOn("NEW_REGULAR_LFG", newRegularLfgHandler);
+};
+
+export default applyEventHandlers;

@@ -1,4 +1,3 @@
-import { EventEmitter } from "events";
 import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "../db/entity/lfg-user";
 import { getRepository } from "../db/typeorm";
 import {
@@ -6,8 +5,9 @@ import {
     NormalLfgUserCreateOption,
     RegularLfgUserCreateOption
 } from "../type/LfgUserCreateOption";
+import { EventTypes, TypedEventEmitter } from "../util/event-emitter";
 
-interface LfgUserEventHandlers {
+interface LfgUserEvents extends EventTypes {
     NORMAL_LFG_CREATOR: [user: NormalLfgUser];
     NORMAL_LFG_JOIN: [user: NormalLfgUser];
     NORMAL_LFG_ALTER: [user: NormalLfgUser];
@@ -22,8 +22,6 @@ interface LfgUserEventHandlers {
     REGULAR_LFG_LEAVE: [lfgID: number, userID: string];
 }
 
-type LfgUserEventHandler<K extends keyof LfgUserEventHandlers> = (...args: LfgUserEventHandlers[K]) => void;
-
 type LfgUserCreateOption = NormalLfgUserCreateOption | LongTermLfgUserCreateOption | RegularLfgUserCreateOption;
 
 type BaseState = "JOIN" | "ALTER";
@@ -32,7 +30,7 @@ type State = BaseState | "CREATOR";
 
 type LfgType = "NORMAL" | "LONG-TERM" | "REGULAR";
 
-class LfgUserManager extends EventEmitter {
+class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
     private static singleton = new LfgUserManager();
 
     private normalLfgUsers: NormalLfgUser[] = [];
@@ -47,14 +45,6 @@ class LfgUserManager extends EventEmitter {
 
     public static get instance() {
         return this.singleton;
-    }
-
-    public on<K extends keyof LfgUserEventHandlers>(eventName: K, listener: LfgUserEventHandler<K>): this {
-        return super.on(eventName, listener as (...args: any[]) => void);
-    }
-
-    public emit<K extends keyof LfgUserEventHandlers>(eventName: K, ...args: LfgUserEventHandlers[K]): boolean {
-        return super.emit(eventName, args);
     }
 
     public async loadUsers() {
@@ -84,7 +74,7 @@ class LfgUserManager extends EventEmitter {
         const user = await this.insertNormalUserToDB(option, "CREATOR");
         this.normalLfgUsers.push(user);
 
-        this.emit("NORMAL_LFG_CREATOR", user);
+        this.typedEmit("NORMAL_LFG_CREATOR", user);
         return user;
     }
 
@@ -92,7 +82,7 @@ class LfgUserManager extends EventEmitter {
         const user = await this.insertLongTermUserToDB(option, "CREATOR");
         this.longTermLfgUsers.push(user);
 
-        this.emit("LONG_TERM_LFG_CREATOR", user);
+        this.typedEmit("LONG_TERM_LFG_CREATOR", user);
         return user;
     }
 
@@ -100,7 +90,7 @@ class LfgUserManager extends EventEmitter {
         const user = await this.insertRegularUserToDB(option, "CREATOR");
         this.regularLfgUsers.push(user);
 
-        this.emit("REGULAR_LFG_CREATOR", user);
+        this.typedEmit("REGULAR_LFG_CREATOR", user);
         return user;
     }
 
@@ -128,6 +118,65 @@ class LfgUserManager extends EventEmitter {
         return this.doJoinOrAlter("REGULAR", option, "ALTER");
     }
 
+    public async leaveNormalUser(lfgID: number, userID: string) {
+        const result = await this.deleteUser("NORMAL", lfgID, userID);
+
+        this.typedEmit("NORMAL_LFG_LEAVE", lfgID, userID);
+
+        return result;
+    }
+
+    public async leaveLongTermUser(lfgID: number, userID: string) {
+        const result = await this.deleteUser("LONG-TERM", lfgID, userID);
+
+        this.typedEmit("LONG_TERM_LFG_LEAVE", lfgID, userID);
+
+        return result;
+    }
+
+    public async leaveRegularUser(lfgID: number, userID: string) {
+        const result = await this.deleteUser("REGULAR", lfgID, userID);
+
+        this.typedEmit("REGULAR_LFG_LEAVE", lfgID, userID);
+
+        return result;
+    }
+
+    private async deleteUser(type: LfgType, lfgID: number, userID: string) {
+        let entity;
+        let target;
+
+        const filter = (user: { lfg: { id: number }, userID: string, state: State }) =>
+            user.lfg.id == lfgID && user.userID == userID && user.state != "CREATOR";
+
+        if (type == "NORMAL") {
+            entity = NormalLfgUser;
+            target = this.normalLfgUsers;
+        } else if (type == "LONG-TERM") {
+            entity = LongTermLfgUser;
+            target = this.longTermLfgUsers;
+        } else {
+            entity = RegularLfgUser;
+            target = this.regularLfgUsers;
+        }
+
+        const idx = target.findIndex(filter);
+
+        if (idx == -1) return false;
+
+        await getRepository(entity)
+            .createQueryBuilder()
+            .delete()
+            .from(entity)
+            .where("LFG_ID = :lfgID AND USER_ID = :userID", {
+                lfgID,
+                userID
+            })
+            .execute();
+
+        return true;
+    }
+
     private async doJoinOrAlter(
         type: LfgType,
         option: LfgUserCreateOption,
@@ -139,8 +188,9 @@ class LfgUserManager extends EventEmitter {
         let target;
         let event;
 
-        const filter = (user: { lfg: { id: number }, userID: string }) =>
-            user.lfg.id == option.lfgID && user.userID == option.userID;
+        const filter = (user: { lfg: { id: number }, userID: string, state: State }) =>
+            user.lfg.id == option.lfgID && user.userID == option.userID
+            && user.state != "CREATOR";
 
         if (type == "NORMAL") {
             insertToDB = this.insertNormalUserToDB;
@@ -167,9 +217,6 @@ class LfgUserManager extends EventEmitter {
         if (idx == -1) {
             user = await insertToDB(option, state);
             target.push(user);
-        } else if (target[idx].state == "CREATOR") {
-            user = await insertToDB(option, state);
-            target.push(user);
         } else if (target[idx].state == state) {
             return false;
         } else {
@@ -180,7 +227,7 @@ class LfgUserManager extends EventEmitter {
             updateFromDB(option.lfgID, user.userID, state);
         }
 
-        this.emit(event as keyof LfgUserEventHandlers, user);
+        this.typedEmit(event, user);
         return true;
     }
 
