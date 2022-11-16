@@ -7,5 +7,8 @@
   "regular-lfg.sql",
   "normal-lfg-user.sql",
   "long-term-lfg-user.sql",
-  "regular-lfg-user.sql"
+  "regular-lfg-user.sql",
+  "normal-lfg-thread.sql",
+  "long-term-lfg-thread.sql",
+  "regular-lfg-thread.sql"
 ]

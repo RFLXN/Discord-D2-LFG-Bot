@@ -3,6 +3,7 @@ import RegularLfgStarter from "./regular-lfg-starter";
 import { LongTermLfg, NormalLfg, RegularLfg } from "./lfg";
 import { ServerLfgConfig } from "./server-lfg-config";
 import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "./lfg-user";
+import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "./lfg-thread";
 
 const index = [
     BotAdmin,
@@ -13,7 +14,10 @@ const index = [
     ServerLfgConfig,
     NormalLfgUser,
     LongTermLfgUser,
-    RegularLfgUser
+    RegularLfgUser,
+    NormalLfgThread,
+    LongTermLfgThread,
+    RegularLfgThread
 ];
 
 export default index;
