@@ -243,23 +243,23 @@ class LfgManager extends TypedEventEmitter<LfgEvents> {
 
     private async getNormalLfgFromDB(id: number): Promise<NormalLfg> {
         return getRepository(NormalLfg)
-            .createQueryBuilder("NORMAL_LFG")
-            .where("NORMAL_LFG.ID = :id", { id })
-            .getOne();
+            .findOne({
+                where: { id }
+            });
     }
 
     private async getLongTermLfgFromDB(id: number): Promise<LongTermLfg> {
         return getRepository(LongTermLfg)
-            .createQueryBuilder("LONG_TERM_LFG")
-            .where("NORMAL_LFG.ID = :id", { id })
-            .getOne();
+            .findOne({
+                where: { id }
+            });
     }
 
     private async getRegularLfgFromDB(id: number): Promise<RegularLfg> {
         return getRepository(RegularLfg)
-            .createQueryBuilder("NORMAL_LFG")
-            .where("NORMAL_LFG.ID = :id", { id })
-            .getOne();
+            .findOne({
+                where: { id }
+            });
     }
 
     private async deleteNormalLfgFromDB(id: number) {
@@ -313,24 +313,21 @@ class LfgManager extends TypedEventEmitter<LfgEvents> {
     private async loadAllNormalLfg() {
         console.log("Loading Normal LFG...");
         this.normalLfg = await getRepository(NormalLfg)
-            .createQueryBuilder("NORMAL_LFG")
-            .getMany();
+            .find();
         console.log(`Normal LFG Loaded. Every '${this.normalLfg.length}' LFG.`);
     }
 
     private async loadAllLongTermLfg() {
         console.log("Loading Long-Term LFG...");
         this.longTermLfg = await getRepository(LongTermLfg)
-            .createQueryBuilder("LONG_TERM_LFG")
-            .getMany();
+            .find();
         console.log(`Long-Term LFG Loaded. Every '${this.longTermLfg.length}' LFG.`);
     }
 
     private async loadAllRegularLfg() {
         console.log("Loading Regular LFG...");
         this.regularLfg = await getRepository(RegularLfg)
-            .createQueryBuilder("REGULAR_LFG")
-            .getMany();
+            .find();
         console.log(`Regular LFG Loaded. Every '${this.regularLfg.length}' LFG.`);
     }
 }

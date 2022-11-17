@@ -95,27 +95,111 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
     }
 
     public async joinNormalUser(option: NormalLfgUserCreateOption) {
-        return this.doJoinOrAlter("NORMAL", option, "JOIN");
+        const idx = this.findNormalUserIndexWithoutCreator(option.lfgID, option.userID);
+        if (idx == -1) {
+            const user = await this.insertNormalUserToDB(option, "JOIN");
+            this.normalLfgUsers.push(user);
+            return true;
+        }
+        if (this.normalLfgUsers[idx].state == "JOIN") {
+            return false;
+        }
+        this.normalLfgUsers[idx].state = "JOIN";
+        this.normalLfgUsers[idx].timestamp = new Date().valueOf();
+        this.updateNormalUserFromDB(option.lfgID, option.userID, "JOIN");
+
+        this.typedEmit("NORMAL_LFG_JOIN", this.normalLfgUsers[idx]);
+        return true;
     }
 
     public async joinLongTermUser(option: LongTermLfgUserCreateOption) {
-        return this.doJoinOrAlter("LONG-TERM", option, "JOIN");
+        const idx = this.findLongTermUserIndexWithoutCreator(option.lfgID, option.userID);
+        if (idx == -1) {
+            const user = await this.insertLongTermUserToDB(option, "JOIN");
+            this.longTermLfgUsers.push(user);
+            return true;
+        }
+        if (this.longTermLfgUsers[idx].state == "JOIN") {
+            return false;
+        }
+        this.longTermLfgUsers[idx].state = "JOIN";
+        this.longTermLfgUsers[idx].timestamp = new Date().valueOf();
+        this.updateLongTermUserFromDB(option.lfgID, option.userID, "JOIN");
+
+        this.typedEmit("LONG_TERM_LFG_JOIN", this.longTermLfgUsers[idx]);
+        return true;
     }
 
     public async joinRegularUser(option: RegularLfgUserCreateOption) {
-        return this.doJoinOrAlter("REGULAR", option, "JOIN");
+        const idx = this.findRegularUserIndexWithoutCreator(option.lfgID, option.userID);
+        if (idx == -1) {
+            const user = await this.insertRegularUserToDB(option, "JOIN");
+            this.regularLfgUsers.push(user);
+            return true;
+        }
+        if (this.normalLfgUsers[idx].state == "JOIN") {
+            return false;
+        }
+        this.regularLfgUsers[idx].state = "JOIN";
+        this.regularLfgUsers[idx].timestamp = new Date().valueOf();
+        this.updateRegularUserFromDB(option.lfgID, option.userID, "JOIN");
+
+        this.typedEmit("REGULAR_LFG_JOIN", this.regularLfgUsers[idx]);
+        return true;
     }
 
     public async alterNormalUser(option: NormalLfgUserCreateOption) {
-        return this.doJoinOrAlter("NORMAL", option, "ALTER");
+        const idx = this.findNormalUserIndexWithoutCreator(option.lfgID, option.userID);
+        if (idx == -1) {
+            const user = await this.insertNormalUserToDB(option, "ALTER");
+            this.normalLfgUsers.push(user);
+            return true;
+        }
+        if (this.normalLfgUsers[idx].state == "ALTER") {
+            return false;
+        }
+        this.normalLfgUsers[idx].state = "ALTER";
+        this.normalLfgUsers[idx].timestamp = new Date().valueOf();
+        this.updateNormalUserFromDB(option.lfgID, option.userID, "ALTER");
+
+        this.typedEmit("NORMAL_LFG_ALTER", this.normalLfgUsers[idx]);
+        return true;
     }
 
     public async alterLongTermUser(option: LongTermLfgUserCreateOption) {
-        return this.doJoinOrAlter("LONG-TERM", option, "ALTER");
+        const idx = this.findLongTermUserIndexWithoutCreator(option.lfgID, option.userID);
+        if (idx == -1) {
+            const user = await this.insertLongTermUserToDB(option, "ALTER");
+            this.longTermLfgUsers.push(user);
+            return true;
+        }
+        if (this.longTermLfgUsers[idx].state == "ALTER") {
+            return false;
+        }
+        this.longTermLfgUsers[idx].state = "ALTER";
+        this.longTermLfgUsers[idx].timestamp = new Date().valueOf();
+        this.updateLongTermUserFromDB(option.lfgID, option.userID, "ALTER");
+
+        this.typedEmit("LONG_TERM_LFG_ALTER", this.longTermLfgUsers[idx]);
+        return true;
     }
 
     public async alterRegularUser(option: RegularLfgUserCreateOption) {
-        return this.doJoinOrAlter("REGULAR", option, "ALTER");
+        const idx = this.findRegularUserIndexWithoutCreator(option.lfgID, option.userID);
+        if (idx == -1) {
+            const user = await this.insertRegularUserToDB(option, "ALTER");
+            this.regularLfgUsers.push(user);
+            return true;
+        }
+        if (this.normalLfgUsers[idx].state == "ALTER") {
+            return false;
+        }
+        this.regularLfgUsers[idx].state = "ALTER";
+        this.regularLfgUsers[idx].timestamp = new Date().valueOf();
+        this.updateRegularUserFromDB(option.lfgID, option.userID, "ALTER");
+
+        this.typedEmit("REGULAR_LFG_ALTER", this.regularLfgUsers[idx]);
+        return true;
     }
 
     public async leaveNormalUser(lfgID: number, userID: string) {
@@ -177,104 +261,64 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
         return true;
     }
 
-    private async doJoinOrAlter(
-        type: LfgType,
-        option: LfgUserCreateOption,
-        state: BaseState
-    ) {
-        let insertToDB;
-        let updateFromDB;
-        let idx = -1;
-        let target;
-        let event;
+    private findNormalUserIndexWithoutCreator(lfgID: number, userID: string): number {
+        return this.normalLfgUsers.findIndex((user) => user.lfg.id == lfgID && user.userID == userID
+            && user.state != "CREATOR");
+    }
 
-        const filter = (user: { lfg: { id: number }, userID: string, state: State }) =>
-            user.lfg.id == option.lfgID && user.userID == option.userID
-            && user.state != "CREATOR";
+    private findLongTermUserIndexWithoutCreator(lfgID: number, userID: string): number {
+        return this.longTermLfgUsers.findIndex((user) => user.lfg.id == lfgID && user.userID == userID
+            && user.state != "CREATOR");
+    }
 
-        if (type == "NORMAL") {
-            insertToDB = this.insertNormalUserToDB;
-            updateFromDB = this.updateNormalUserFromDB;
-            idx = this.normalLfgUsers.findIndex(filter);
-            event = `NORMAL_LFG_${state}`;
-            target = this.normalLfgUsers;
-        } else if (type == "LONG-TERM") {
-            insertToDB = this.insertLongTermUserToDB;
-            updateFromDB = this.updateLongTermUserFromDB;
-            idx = this.longTermLfgUsers.findIndex(filter);
-            target = this.longTermLfgUsers;
-            event = `LONG_TERM_LFG_${state}`;
-        } else {
-            insertToDB = this.insertRegularUserToDB;
-            updateFromDB = this.updateRegularUserFromDB;
-            idx = this.regularLfgUsers.findIndex(filter);
-            target = this.regularLfgUsers;
-            event = `REGULAR_LFG_${state}`;
-        }
-
-        let user;
-
-        if (idx == -1) {
-            user = await insertToDB(option, state);
-            target.push(user);
-        } else if (target[idx].state == state) {
-            return false;
-        } else {
-            target[idx].state = state;
-            target[idx].timestamp = new Date().valueOf();
-            user = target[idx];
-
-            updateFromDB(option.lfgID, user.userID, state);
-        }
-
-        this.typedEmit(event, user);
-        return true;
+    private findRegularUserIndexWithoutCreator(lfgID: number, userID: string): number {
+        return this.regularLfgUsers.findIndex((user) => user.lfg.id == lfgID && user.userID == userID
+            && user.state != "CREATOR");
     }
 
     private async insertNormalUserToDB(option: NormalLfgUserCreateOption, state: State) {
-        return this.insertUserToDB("NORMAL", option, state) as Promise<NormalLfgUser>;
+        const result = await getRepository(NormalLfgUser)
+            .insert({
+                lfg: { id: option.lfgID },
+                userID: option.userID,
+                userTag: option.userTag,
+                userName: option.userName,
+                state,
+                timestamp: new Date().valueOf()
+            });
+        const { id } = result.identifiers[0];
+
+        return this.getNormalUserByID(id);
     }
 
     private async insertLongTermUserToDB(option: LongTermLfgUserCreateOption, state: State) {
-        return this.insertUserToDB("LONG-TERM", option, state) as Promise<LongTermLfgUser>;
+        const result = await getRepository(LongTermLfgUser)
+            .insert({
+                lfg: { id: option.lfgID },
+                userID: option.userID,
+                userTag: option.userTag,
+                userName: option.userName,
+                state,
+                timestamp: new Date().valueOf()
+            });
+        const { id } = result.identifiers[0];
+
+        return this.getLongTermUserByID(id);
     }
 
     private async insertRegularUserToDB(option: RegularLfgUserCreateOption, state: State) {
-        return this.insertUserToDB("REGULAR", option, state) as Promise<RegularLfgUser>;
-    }
-
-    private async insertUserToDB(type: LfgType, option: LfgUserCreateOption, state: State):
-    Promise<NormalLfgUser | LongTermLfgUser | RegularLfgUser> {
-        let entity;
-        let getter;
-        if (type == "NORMAL") {
-            entity = NormalLfgUser;
-            getter = this.getNormalUserByID;
-        } else if (type == "LONG-TERM") {
-            entity = LongTermLfgUser;
-            getter = this.getLongTermUserByID;
-        } else {
-            entity = RegularLfgUser;
-            getter = this.getRegularUserByID;
-        }
-
-        const result = await getRepository(entity)
-            .createQueryBuilder()
-            .insert()
-            .into(entity)
-            .values({
+        const result = await getRepository(RegularLfgUser)
+            .insert({
                 lfg: { id: option.lfgID },
                 userID: option.userID,
-                userName: option.userName,
                 userTag: option.userTag,
+                userName: option.userName,
                 state,
                 timestamp: new Date().valueOf()
-            })
-            .execute();
-
+            });
         const { id } = result.identifiers[0];
 
-        return getter(id);
+        return this.getRegularUserByID(id);
     }
 
     private async updateNormalUserFromDB(lfgID: number, userID: string, state: BaseState) {
@@ -314,46 +358,52 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
 
     private async getNormalUserByID(id: number) {
         return getRepository(NormalLfgUser)
-            .createQueryBuilder()
-            .where("ID = :id", { id })
-            .getOne();
+            .findOne({
+                relations: ["lfg"],
+                where: { id }
+            });
     }
 
     private async getLongTermUserByID(id: number) {
         return getRepository(LongTermLfgUser)
-            .createQueryBuilder()
-            .where("ID = :id", { id })
-            .getOne();
+            .findOne({
+                relations: ["lfg"],
+                where: { id }
+            });
     }
 
     private async getRegularUserByID(id: number) {
         return getRepository(RegularLfgUser)
-            .createQueryBuilder()
-            .where("ID = :id", { id })
-            .getOne();
+            .findOne({
+                relations: ["lfg"],
+                where: { id }
+            });
     }
 
     private async loadNormalUsers() {
         console.log("Loading Normal LFG Users...");
         this.normalLfgUsers = await getRepository(NormalLfgUser)
-            .createQueryBuilder()
-            .getMany();
+            .find({
+                relations: ["lfg"]
+            });
         console.log(`Normal LFG Users Loaded. Every '${this.normalLfgUsers.length}' Users.`);
     }
 
     private async loadLongTermUsers() {
         console.log("Loading Long-Term LFG Users...");
         this.longTermLfgUsers = await getRepository(LongTermLfgUser)
-            .createQueryBuilder()
-            .getMany();
+            .find({
+                relations: ["lfg"]
+            });
         console.log(`Long-Term LFG Users Loaded. Every '${this.longTermLfgUsers.length}' Users.`);
     }
 
     private async loadRegularUsers() {
         console.log("Loading Regular LFG Users...");
         this.regularLfgUsers = await getRepository(RegularLfgUser)
-            .createQueryBuilder()
-            .getMany();
+            .find({
+                relations: ["lfg"]
+            });
         console.log(`Regular LFG Users Loaded. Every '${this.regularLfgUsers.length}' Users.`);
     }
 }
