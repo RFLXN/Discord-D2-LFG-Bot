@@ -4,6 +4,7 @@ import { LongTermLfg, NormalLfg, RegularLfg } from "./lfg";
 import { ServerLfgConfig } from "./server-lfg-config";
 import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "./lfg-user";
 import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "./lfg-thread";
+import { LongTermLfgMessage, NormalLfgMessage, RegularLfgMessage } from "./lfg-message";
 
 const index = [
     BotAdmin,
@@ -17,7 +18,10 @@ const index = [
     RegularLfgUser,
     NormalLfgThread,
     LongTermLfgThread,
-    RegularLfgThread
+    RegularLfgThread,
+    NormalLfgMessage,
+    LongTermLfgMessage,
+    RegularLfgMessage
 ];
 
 export default index;

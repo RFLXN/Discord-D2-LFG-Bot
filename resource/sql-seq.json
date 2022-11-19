@@ -10,5 +10,8 @@
   "regular-lfg-user.sql",
   "normal-lfg-thread.sql",
   "long-term-lfg-thread.sql",
-  "regular-lfg-thread.sql"
+  "regular-lfg-thread.sql",
+  "normal-lfg-message.sql",
+  "long-term-lfg-message.sql",
+  "regular-lfg-message.sql"
 ]

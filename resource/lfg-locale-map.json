@@ -11,7 +11,17 @@
     "modalDateInputDescription": "Format: \"YYYY-MM-DD HH:mm\" or \"now\"\nExample: 2022-12-25 20:30",
     "waitingLfgCreationMessage": "Creating Looking-For-Group. Please Wait.",
     "lfgCreationCompleteMessage": "Looking-For-Group Created.",
-    "needInitLfgServerConfig": "Need Initialize LFG Server Configs. Pleas Call Server Administrator."
+    "needInitLfgServerConfig": "Need Initialize LFG Server Configs. Pleas Call Server Administrator.",
+    "normalLfg": "Normal Looking-For-Group",
+    "longTermLfg": "Long-Term Looking-For-Group",
+    "regularLfg": "Regular Looking-For-Group",
+    "description": "Description",
+    "creator": "Creator",
+    "datetime": "Datetime",
+    "activity": "Activity",
+    "join": "Join",
+    "alter": "Alter",
+    "leave": "Leave"
   },
   "ko": {
     "activityCreateSelectionTitle": "파티모집 생성",
@@ -25,7 +35,17 @@
     "modalDateInputDescription": "형식: \"YYYY-MM-DD HH:mm\" 혹은 \"now\"\n예제: 2022-12-25 20:30",
     "waitingLfgCreationMessage": "파티모집을 생성중입니다. 잠시만 기다려주세요.",
     "lfgCreationCompleteMessage": "파티모집이 생성되었습니다.",
-    "needInitLfgServerConfig": "서버 파티모집 컨픽이 설정돼지 않았습니다. 서버 관리자를 불러주세요."
+    "needInitLfgServerConfig": "서버 파티모집 컨픽이 설정돼지 않았습니다. 서버 관리자를 불러주세요.",
+    "normalLfg": "파티모집",
+    "longTermLfg": "장기 파티모집",
+    "regularLfg": "정규 파티모집",
+    "description": "설명",
+    "creator": "작성자",
+    "datetime": "일시",
+    "activity": "활동",
+    "join": "참여",
+    "alter": "참여 여부 불명",
+    "leave": "퇴장"
   },
   "ja": {
     "activityCreateSelectionTitle": "パーティ募集作成",
@@ -39,6 +59,16 @@
     "modalDateInputDescription": "形式: \"YYYY-MM-DD HH:mm\"または\"now\"\n例: 2022-12-25 20:30",
     "waitingLfgCreationMessage": "パーティ募集を作成中です。少しお待ちください。",
     "lfgCreationCompleteMessage": "パーティ募集を作成しました。",
-    "needInitLfgServerConfig": "サーバーのパーティ募集コンフィグが設定されていません。サーバー管理者を読んでください。"
+    "needInitLfgServerConfig": "サーバーのパーティ募集コンフィグが設定されていません。サーバー管理者を読んでください。",
+    "normalLfg": "パーティ募集",
+    "longTermLfg": "長期パーティ募集",
+    "regularLfg": "定期パーティ募集",
+    "description": "説明",
+    "creator": "作成者",
+    "datetime": "日時",
+    "activity": "活動",
+    "join": "参加",
+    "alter": "参加不明",
+    "leave": "退場"
   }
 }

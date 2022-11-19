@@ -3,6 +3,7 @@ import {
 } from "typeorm";
 import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "./lfg-user";
 import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "./lfg-thread";
+import { LongTermLfgMessage, NormalLfgMessage, RegularLfgMessage } from "./lfg-message";
 
 abstract class BaseLfg {
     @PrimaryGeneratedColumn("increment", {
@@ -53,6 +54,9 @@ class NormalLfg extends DateLfg {
 
     @OneToMany((type) => NormalLfgThread, (thread) => thread.lfg)
         threads: NormalLfgThread[];
+
+    @OneToMany((type) => NormalLfgMessage, (message) => message.lfg)
+        messages: NormalLfgMessage[];
 }
 
 @Entity({ name: "LONG_TERM_LFG" })
@@ -62,6 +66,9 @@ class LongTermLfg extends DateLfg {
 
     @OneToMany((type) => LongTermLfgThread, (thread) => thread.lfg)
         threads: LongTermLfgThread[];
+
+    @OneToMany((type) => LongTermLfgMessage, (message) => message.lfg)
+        messages: LongTermLfgMessage[];
 }
 
 @Entity({ name: "REGULAR_LFG" })
@@ -71,6 +78,9 @@ class RegularLfg extends BaseLfg {
 
     @OneToMany((type) => RegularLfgThread, (thread) => thread.lfg)
         threads: RegularLfgThread[];
+
+    @OneToMany((type) => RegularLfgMessage, (message) => message.lfg)
+        messages: RegularLfgMessage[];
 }
 
 export { NormalLfg, LongTermLfg, RegularLfg };

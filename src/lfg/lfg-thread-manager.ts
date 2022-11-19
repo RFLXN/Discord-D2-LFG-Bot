@@ -7,7 +7,11 @@ import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
 import { getRepository } from "../db/typeorm";
 import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "../db/entity/lfg-thread";
 
-type LfgThreadEvents = EventTypes;
+interface LfgThreadEvents extends EventTypes {
+    newNormalThread: [entity: NormalLfgThread, real: ThreadChannel];
+    newLongTermThread: [entity: LongTermLfgThread, real: ThreadChannel];
+    newRegularThread: [entity: RegularLfgThread, real: ThreadChannel];
+}
 
 type LfgThread = NormalLfgThread | LongTermLfgThread | RegularLfgThread;
 
@@ -97,7 +101,11 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
 
         this.normalThreads.push(created as NormalLfgThread);
 
-        return thread;
+        this.typedEmit("newNormalThread", created as NormalLfgThread, thread);
+        return {
+            entity: created,
+            real: thread
+        };
     }
 
     public async createLongTermThread(lfgID: number) {
@@ -114,7 +122,11 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
 
         this.longTermThreads.push(created as LongTermLfgThread);
 
-        return thread;
+        this.typedEmit("newLongTermThread", created as LongTermLfgThread, thread);
+        return {
+            entity: created,
+            real: thread
+        };
     }
 
     public async createRegularThread(lfgID: number) {
@@ -131,7 +143,11 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
 
         this.regularThreads.push(created as RegularLfgThread);
 
-        return thread;
+        this.typedEmit("newRegularThread", created as RegularLfgThread, thread);
+        return {
+            entity: created,
+            real: thread
+        };
     }
 
     public deleteNormalThread(lfgID: number) {
@@ -307,21 +323,21 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
     private async loadNormalThreads() {
         console.log("Loading Normal LFG Threads...");
         this.normalThreads = await getRepository(NormalLfgThread)
-            .find();
+            .find({ relations: ["lfg"] });
         console.log(`Normal LFG Threads Loaded. Every '${this.normalThreads.length}' Threads.`);
     }
 
     private async loadLongTermThreads() {
         console.log("Loading Long-Term LFG Threads...");
         this.longTermThreads = await getRepository(LongTermLfgThread)
-            .find();
+            .find({ relations: ["lfg"] });
         console.log(`Long-Term LFG Threads Loaded. Every '${this.longTermThreads.length}' Threads.`);
     }
 
     private async loadRegularThreads() {
         console.log("Loading Regular LFG Threads...");
         this.regularThreads = await getRepository(RegularLfgThread)
-            .find();
+            .find({ relations: ["lfg"] });
         console.log(`Regular LFG Threads Loaded. Every '${this.regularThreads.length}' Threads.`);
     }
 }

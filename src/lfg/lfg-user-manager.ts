@@ -57,17 +57,17 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
 
     public getNormalUsers(id: number): NormalLfgUser[] {
         return this.normalLfgUsers.filter((user) => user.lfg.id == id)
-            .sort((a, b) => a.date.valueOf() - b.date.valueOf());
+            .sort((a, b) => a.timestamp - b.timestamp);
     }
 
     public getLongTermUsers(id: number): LongTermLfgUser[] {
         return this.longTermLfgUsers.filter((user) => user.lfg.id == id)
-            .sort((a, b) => a.date.valueOf() - b.date.valueOf());
+            .sort((a, b) => a.timestamp - b.timestamp);
     }
 
     public getRegularUsers(id: number): RegularLfgUser[] {
         return this.regularLfgUsers.filter((user) => user.lfg.id == id)
-            .sort((a, b) => a.date.valueOf() - b.date.valueOf());
+            .sort((a, b) => a.timestamp - b.timestamp);
     }
 
     public async newNormalCreator(option: NormalLfgUserCreateOption): Promise<NormalLfgUser> {

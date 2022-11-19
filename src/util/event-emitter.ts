@@ -26,6 +26,10 @@ class TypedEventEmitter<E extends EventTypes> extends EventEmitter {
     public typedEmit<K extends keyof E>(eventName: K, ...args: E[K]): boolean {
         return super.emit(eventName as string, ...args);
     }
+
+    public typedRemoveListener<K extends keyof E>(eventName: K, listener: (...args: E[K]) => void): this {
+        return super.removeListener(eventName as string, listener as AnyListener);
+    }
 }
 
 export { TypedEventEmitter, EventTypes };

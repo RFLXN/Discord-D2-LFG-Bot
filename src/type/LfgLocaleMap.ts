@@ -12,7 +12,17 @@ interface LfgLocaleMapElements {
     modalDateInputDescription: string,
     waitingLfgCreationMessage: string,
     lfgCreationCompleteMessage: string,
-    needInitLfgServerConfig: string
+    needInitLfgServerConfig: string,
+    normalLfg: string,
+    longTermLfg: string,
+    regularLfg: string,
+    description: string,
+    creator: string,
+    datetime: string,
+    activity: string,
+    join: string,
+    alter: string,
+    leave: string
 }
 
 type BaseLfgLocaleMap = Partial<Record<LocaleString, LfgLocaleMapElements>>;

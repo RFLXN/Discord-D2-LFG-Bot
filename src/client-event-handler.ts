@@ -12,6 +12,7 @@ import applyEventHandlers from "./lfg/event-handler";
 import { LfgUserManager } from "./lfg/lfg-user-manager";
 import { loadLfgServerConfigs } from "./lfg/server-config";
 import LfgThreadManager from "./lfg/lfg-thread-manager";
+import { LfgMessageManager } from "./lfg/lfg-message-manager";
 
 const onReady = async (client: Client<true>) => {
     console.log(`Bot Logged in Discord. (Tag: ${client.user.tag} / ID: ${client.user.id})`);
@@ -22,6 +23,7 @@ const onReady = async (client: Client<true>) => {
     await LfgManager.instance.loadLfg();
     await LfgUserManager.instance.loadUsers();
     await LfgThreadManager.instance.loadThreads();
+    await LfgMessageManager.instance.loadMessages();
     await loadActivityMap();
     await loadLfgLocaleMap();
     await loadLfgServerConfigs();

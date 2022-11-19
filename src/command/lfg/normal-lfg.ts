@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, ThreadChannel } from "discord.js";
 import { ComponentType } from "discord-api-types/v10";
 import moment from "moment";
 import { LfgSubCommandExecutor, LfgSubCommandExecutors, LfgSubCommandIdExecutor } from "../lfg";
@@ -11,6 +11,10 @@ import {
 } from "./share";
 import { LfgManager } from "../../lfg/lfg-manager";
 import { getLocalizedString } from "../../lfg/locale-map";
+import LfgThreadManager from "../../lfg/lfg-thread-manager";
+import { LfgUserManager } from "../../lfg/lfg-user-manager";
+import { LfgMessageManager } from "../../lfg/lfg-message-manager";
+import { NormalLfgThread } from "../../db/entity/lfg-thread";
 
 const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInteraction) => {
     const locale = getLocale(interaction.locale);
@@ -68,6 +72,43 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
     await modalMessage.edit({
         content: `${getLocalizedString(locale, "lfgCreationCompleteMessage")} (ID: ${createdLfg.id})`
     });
+
+    const messageCreatingMessage = await modalMessage.channel.send({
+        content: "Creating Info Message... Please Wait."
+    });
+
+    const afterCreatedListener = async (thread: NormalLfgThread, real: ThreadChannel) => {
+        if (thread.lfg.id != createdLfg.id) return;
+
+        const users = LfgUserManager.instance.getNormalUsers(createdLfg.id);
+        const embed = LfgMessageManager.instance.createMessageEmbed({
+            type: "NORMAL",
+            lfg: createdLfg,
+            users,
+            thread,
+            locale
+        });
+        const buttons = LfgMessageManager.instance.createMessageButton("NORMAL", createdLfg.id, locale);
+        await messageCreatingMessage.edit({
+            embeds: [embed],
+            components: [buttons]
+        });
+
+        await LfgMessageManager.instance.createNormalMessage({
+            type: "NORMAL",
+            guildID: messageCreatingMessage.guild.id,
+            channelID: messageCreatingMessage.channel.isThread()
+                ? messageCreatingMessage.channel.parent.id : messageCreatingMessage.channel.id,
+            messageID: messageCreatingMessage.id,
+            lfgID: createdLfg.id,
+            threadID: messageCreatingMessage.channel.isThread()
+                ? messageCreatingMessage.channel.id : undefined
+        });
+
+        LfgThreadManager.instance.typedRemoveListener("newNormalThread", afterCreatedListener);
+    };
+
+    LfgThreadManager.instance.typedOn("newNormalThread", afterCreatedListener);
 };
 
 const doGetInfo: LfgSubCommandIdExecutor = async (interaction: ChatInputCommandInteraction, lfgId: number) => {
