@@ -90,7 +90,7 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
     public async createNormalThread(lfgID: number) {
         const lfg = LfgManager.instance.getNormalLfg(lfgID);
         const channel = await this.getChannelFromLfg("NORMAL", lfg);
-        const thread = await this.createThread(channel, lfg);
+        const thread = await this.createThread(channel, lfg, "NORMAL");
 
         const created = await this.insertThread("NORMAL", {
             lfg,
@@ -111,7 +111,7 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
     public async createLongTermThread(lfgID: number) {
         const lfg = LfgManager.instance.getLongTermLfg(lfgID);
         const channel = await this.getChannelFromLfg("LONG-TERM", lfg);
-        const thread = await this.createThread(channel, lfg);
+        const thread = await this.createThread(channel, lfg, "LONG-TERM");
 
         const created = await this.insertThread("LONG-TERM", {
             lfg,
@@ -132,7 +132,7 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
     public async createRegularThread(lfgID: number) {
         const lfg = LfgManager.instance.getRegularLfg(lfgID);
         const channel = await this.getChannelFromLfg("REGULAR", lfg);
-        const thread = await this.createThread(channel, lfg);
+        const thread = await this.createThread(channel, lfg, "REGULAR");
 
         const created = await this.insertThread("REGULAR", {
             lfg,
@@ -240,11 +240,20 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
 
     private async createThread(
         channel: TextChannel,
-        lfg: NormalLfg | RegularLfg | LongTermLfg
+        lfg: NormalLfg | RegularLfg | LongTermLfg,
+        type: LfgType
     )
         : Promise<ThreadChannel> {
+        let head;
+        if (type == "NORMAL") {
+            head = "N";
+        } else if (type == "LONG-TERM") {
+            head = "L";
+        } else {
+            head = "R";
+        }
         return channel.threads.create({
-            name: `${lfg.id}-${lfg.activityName.replaceAll(" ", "-")
+            name: `${head}${lfg.id}-${lfg.activityName.replaceAll(" ", "-")
                 .replaceAll("---", "-")}`,
             autoArchiveDuration: ThreadAutoArchiveDuration.OneDay
         });

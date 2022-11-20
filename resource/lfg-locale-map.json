@@ -21,7 +21,8 @@
     "activity": "Activity",
     "join": "Join",
     "alter": "Alter",
-    "leave": "Leave"
+    "leave": "Leave",
+    "pleaseInputDescription": "Please Type Looking-For-Group Description."
   },
   "ko": {
     "activityCreateSelectionTitle": "파티모집 생성",
@@ -45,7 +46,8 @@
     "activity": "활동",
     "join": "참여",
     "alter": "참여 여부 불명",
-    "leave": "퇴장"
+    "leave": "퇴장",
+    "pleaseInputDescription": "파티모집 설명을 입력해 주세요."
   },
   "ja": {
     "activityCreateSelectionTitle": "パーティ募集作成",
@@ -69,6 +71,7 @@
     "activity": "活動",
     "join": "参加",
     "alter": "参加不明",
-    "leave": "退場"
+    "leave": "退場",
+    "pleaseInputDescription": "パーティ募集の説明を入力してください。"
   }
 }

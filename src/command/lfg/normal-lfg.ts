@@ -46,11 +46,22 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
         component.customId == `lfg-modal-description-${interaction.id}`).value;
     const lfgDateString = flatModalComponents.find((component) =>
         component.customId == `lfg-modal-date-${interaction.id}`).value;
-    const date = lfgDateString.replaceAll("\n", "")
-        .toLowerCase() == "now"
-        ? new Date()
-        : moment(lfgDateString, "YYYY-MM-DD HH:mm")
-            .toDate();
+    let date;
+
+    if (lfgDateString.replaceAll("\n", "")
+        .toLowerCase() == "now") {
+        date = new Date();
+    } else {
+        try {
+            date = moment(lfgDateString, "YYYY-MM-DD HH:mm")
+                .toDate();
+        } catch (e) {
+            await modalAwaited.reply({
+                content: `Error: '${lfgDateString.replaceAll("\n", "")}' is Invalid Format.`
+            });
+            return;
+        }
+    }
 
     const modalMessage = await modalAwaited.reply({
         content: getLocalizedString(locale, "waitingLfgCreationMessage"),
@@ -89,7 +100,9 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
             locale
         });
         const buttons = LfgMessageManager.instance.createMessageButton("NORMAL", createdLfg.id, locale);
-        await messageCreatingMessage.edit({
+
+        await messageCreatingMessage.delete();
+        await messageCreatingMessage.channel.send({
             embeds: [embed],
             components: [buttons]
         });

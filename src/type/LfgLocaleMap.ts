@@ -22,7 +22,8 @@ interface LfgLocaleMapElements {
     activity: string,
     join: string,
     alter: string,
-    leave: string
+    leave: string,
+    pleaseInputDescription: string
 }
 
 type BaseLfgLocaleMap = Partial<Record<LocaleString, LfgLocaleMapElements>>;

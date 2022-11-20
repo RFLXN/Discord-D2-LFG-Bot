@@ -87,10 +87,20 @@ const createLfgDataModal = (locale: keyof LfgLocaleMap, id: string, type: "creat
 const flattenModalResponseComponent = (components: ActionRowModalData[]): TextInputModalData[] =>
     components.flatMap((component) => component.components) as TextInputModalData[];
 
+const createDescriptionInputEmbed = (locale: keyof LfgLocaleMap, type: "create" | "edit") => {
+    const embed = new EmbedBuilder();
+    embed.setTitle(type == "create" ? getLocalizedString(locale, "activityCreateSelectionTitle")
+        : getLocalizedString(locale, "activityEditSelectionTitle"))
+        .setDescription(getLocalizedString(locale, "pleaseInputDescription"));
+
+    return embed;
+};
+
 export {
     getLocale,
     createActivitySelectActionRow,
     createActivitySelectEmbed,
     createLfgDataModal,
-    flattenModalResponseComponent
+    flattenModalResponseComponent,
+    createDescriptionInputEmbed
 };

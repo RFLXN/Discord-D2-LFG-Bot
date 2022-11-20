@@ -11,6 +11,7 @@ import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "../db/enti
 import { LongTermLfgMessage, NormalLfgMessage, RegularLfgMessage } from "../db/entity/lfg-message";
 import { getRepository } from "../db/typeorm";
 import LfgMessageCreateOption from "../type/LfgMessageCreateOption";
+import { getActivityMap } from "./activity-map";
 
 interface LfgMessageEvents extends EventTypes {
     newNormalMessage: [];
@@ -58,6 +59,7 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         const embed = new EmbedBuilder();
         const localeMapKey = option.locale == "default" ? "default" : getLocale(option.locale);
         let typeStr;
+        let description = "";
 
         if (option.type == "NORMAL") {
             typeStr = getLocalizedString(localeMapKey, "normalLfg");
@@ -67,10 +69,31 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
             typeStr = getLocalizedString(localeMapKey, "regularLfg");
         }
 
+        const activityObj = getActivityMap()
+            .find((activity) => activity.name == option.lfg.activityName);
+
+        let activity;
+
+        if (localeMapKey == "default") {
+            activity = activityObj.name;
+        } else {
+            activity = activityObj.localizationName[localeMapKey];
+        }
+
+        description += `${activity}\n`;
+
+        if (option.type == "NORMAL" || option.type == "LONG-TERM") {
+            const lfg = option.lfg as NormalLfg | LongTermLfg;
+            const dateString = `<t:${Math.floor(lfg.timestamp / 1000)}:F> (<t:${Math.floor(lfg.timestamp / 1000)}:R>)`;
+            description += `${lfg.description}\n${dateString}`;
+        } else {
+            description += option.lfg.description;
+        }
+
         const creator = option.users.find((user) => user.state == "CREATOR");
 
         embed.setTitle(`${typeStr}: ${option.lfg.id}`)
-            .setDescription(option.lfg.description)
+            .setDescription(description)
             .setFooter({
                 text: `${getLocalizedString(localeMapKey, "creator")}: ${creator.userName} (${creator.userTag})`
             })
