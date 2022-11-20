@@ -125,7 +125,7 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         if (type == "NORMAL") {
             typeStr = "normal";
         } else if (type == "LONG-TERM") {
-            typeStr = "long-term";
+            typeStr = "longterm";
         } else {
             typeStr = "regular";
         }

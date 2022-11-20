@@ -1,4 +1,6 @@
-import { ChatInputCommandInteraction, Client, Interaction } from "discord.js";
+import {
+    ButtonInteraction, ChatInputCommandInteraction, Client, Interaction
+} from "discord.js";
 import { registerCommands } from "./command-register";
 import sqliteInit from "./db/sqlite";
 import index from "./command";
@@ -13,6 +15,7 @@ import { LfgUserManager } from "./lfg/lfg-user-manager";
 import { loadLfgServerConfigs } from "./lfg/server-config";
 import LfgThreadManager from "./lfg/lfg-thread-manager";
 import { LfgMessageManager } from "./lfg/lfg-message-manager";
+import { handleButton } from "./lfg/handle-button";
 
 const onReady = async (client: Client<true>) => {
     console.log(`Bot Logged in Discord. (Tag: ${client.user.tag} / ID: ${client.user.id})`);
@@ -44,6 +47,26 @@ const onInteractionCreate = async (interaction: Interaction) => {
                     + `(Name: ${targetCmd.data.name} / ID: ${interaction.id})`);
             } catch (e) {
                 console.error(`Failed to Execute Command (Name: ${targetCmd.data.name} / ID: ${interaction.id})`);
+                console.error(e);
+            }
+        }
+
+        return;
+    }
+
+    if (interaction.isButton()) {
+        const i = interaction as ButtonInteraction;
+
+        if (i.customId.startsWith("lfg")) {
+            try {
+                const start = new Date();
+                console.log(`Executing Button Interaction. (${interaction.customId} / ${interaction.id})`);
+                await handleButton(i);
+                const end = new Date();
+                console.log(`Button Interaction Executed in ${end.valueOf() - start.valueOf()} ms. `
+                    + `(${interaction.customId} / ${interaction.id})`);
+            } catch (e) {
+                console.error(`Failed to Execute Button Interaction (${interaction.customId} / ${interaction.id})`);
                 console.error(e);
             }
         }
