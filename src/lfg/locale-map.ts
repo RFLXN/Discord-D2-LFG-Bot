@@ -22,4 +22,17 @@ const getLocalizedString = (locale: keyof LfgLocaleMap, key: keyof LfgLocaleMapE
     return target;
 };
 
-export { loadLfgLocaleMap, getLfgLocaleMap, getLocalizedString };
+const getStrings = (key: keyof LfgLocaleMapElements) => {
+    const locales = Object.keys(localeMap) as (keyof LfgLocaleMap)[];
+    const strings: { locale: keyof LfgLocaleMap, value: string }[] = [];
+    locales.map((locale) => strings.push({
+        locale,
+        value: localeMap[locale][key]
+    }));
+
+    return strings;
+};
+
+export {
+    loadLfgLocaleMap, getLfgLocaleMap, getLocalizedString, getStrings
+};

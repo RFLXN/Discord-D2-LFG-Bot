@@ -22,7 +22,13 @@
     "join": "Join",
     "alter": "Alter",
     "leave": "Leave",
-    "pleaseInputDescription": "Please Type Looking-For-Group Description."
+    "pleaseInputDescription": "Please Type Looking-For-Group Description.",
+    "notJoined": "You Are Not Joined in This Looking-For-Group.",
+    "leaved": "Leave From Looking-For-Party.",
+    "alreadyJoined": "You Are Already Joined in This Looking-For-Group.",
+    "joined": "Join in This Looking-For-Group.",
+    "alreadyAltered": "You Are Already Altered in This Looking-For-Group.",
+    "altered": "Alter in This Looking-For-Group."
   },
   "ko": {
     "activityCreateSelectionTitle": "파티모집 생성",
@@ -45,9 +51,15 @@
     "datetime": "일시",
     "activity": "활동",
     "join": "참여",
-    "alter": "참여 여부 불명",
+    "alter": "참여 여부 불분명",
     "leave": "퇴장",
-    "pleaseInputDescription": "파티모집 설명을 입력해 주세요."
+    "pleaseInputDescription": "파티모집 설명을 입력해 주세요.",
+    "notJoined": "이 파티모집에 참여하고 있지 않습니다.",
+    "leaved": "이 파티모집에서 탈퇴합니다.",
+    "alreadyJoined": "이미 참여중입니다.",
+    "joined": "이 파티모집에 참여합니다.",
+    "alreadyAltered": "이미 이 파티모집에 참여 여부 불분명으로 참여중입니다.",
+    "altered": "이 파티모집에 참여 여부 불분명으로 참여합니다."
   },
   "ja": {
     "activityCreateSelectionTitle": "パーティ募集作成",
@@ -72,6 +84,12 @@
     "join": "参加",
     "alter": "参加不明",
     "leave": "退場",
-    "pleaseInputDescription": "パーティ募集の説明を入力してください。"
+    "pleaseInputDescription": "パーティ募集の説明を入力してください。",
+    "notJoined": "まだこのパーティ募集に参加していません。",
+    "leaved": "このパーティ募集から退場します。",
+    "alreadyJoined": "このパーティ募集にすでに参加しています。",
+    "joined": "このパーティ募集に参加します。",
+    "alreadyAltered": "このパーティ募集にすでに参加不明で入っています。",
+    "altered": "このパーティ募集に参加不明で入ります。"
   }
 }

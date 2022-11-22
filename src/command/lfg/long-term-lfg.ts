@@ -106,20 +106,20 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
         console.log(messageCreatingMessage);
 
         await messageCreatingMessage.delete();
-        await messageCreatingMessage.channel.send({
+        const lfgMessage = await messageCreatingMessage.channel.send({
             embeds: [embed],
             components: [buttons]
         });
 
         await LfgMessageManager.instance.createLongTermMessage({
             type: "NORMAL",
-            guildID: messageCreatingMessage.guild.id,
-            channelID: messageCreatingMessage.channel.isThread()
-                ? messageCreatingMessage.channel.parent.id : messageCreatingMessage.channel.id,
-            messageID: messageCreatingMessage.id,
+            guildID: lfgMessage.guild.id,
+            channelID: lfgMessage.channel.isThread()
+                ? lfgMessage.channel.parent.id : lfgMessage.channel.id,
+            messageID: lfgMessage.id,
             lfgID: createdLfg.id,
-            threadID: messageCreatingMessage.channel.isThread()
-                ? messageCreatingMessage.channel.id : undefined
+            threadID: lfgMessage.channel.isThread()
+                ? lfgMessage.channel.id : undefined
         });
 
         LfgThreadManager.instance.typedRemoveListener("newLongTermThread", afterCreatedListener);

@@ -23,7 +23,13 @@ interface LfgLocaleMapElements {
     join: string,
     alter: string,
     leave: string,
-    pleaseInputDescription: string
+    pleaseInputDescription: string,
+    notJoined: string,
+    leaved: string,
+    alreadyJoined: string,
+    joined: string,
+    alreadyAltered: string,
+    altered: string,
 }
 
 type BaseLfgLocaleMap = Partial<Record<LocaleString, LfgLocaleMapElements>>;

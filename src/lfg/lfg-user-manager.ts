@@ -191,7 +191,7 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
             this.regularLfgUsers.push(user);
             return true;
         }
-        if (this.normalLfgUsers[idx].state == "ALTER") {
+        if (this.regularLfgUsers[idx].state == "ALTER") {
             return false;
         }
         this.regularLfgUsers[idx].state = "ALTER";
@@ -202,63 +202,70 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
         return true;
     }
 
-    public async leaveNormalUser(lfgID: number, userID: string) {
-        const result = await this.deleteUser("NORMAL", lfgID, userID);
-
-        this.typedEmit("NORMAL_LFG_LEAVE", lfgID, userID);
-
-        return result;
-    }
-
-    public async leaveLongTermUser(lfgID: number, userID: string) {
-        const result = await this.deleteUser("LONG-TERM", lfgID, userID);
-
-        this.typedEmit("LONG_TERM_LFG_LEAVE", lfgID, userID);
-
-        return result;
-    }
-
-    public async leaveRegularUser(lfgID: number, userID: string) {
-        const result = await this.deleteUser("REGULAR", lfgID, userID);
-
-        this.typedEmit("REGULAR_LFG_LEAVE", lfgID, userID);
-
-        return result;
-    }
-
-    private async deleteUser(type: LfgType, lfgID: number, userID: string) {
-        let entity;
-        let target;
-
+    public leaveNormalUser(lfgID: number, userID: string) {
         const filter = (user: { lfg: { id: number }, userID: string, state: State }) =>
             user.lfg.id == lfgID && user.userID == userID && user.state != "CREATOR";
 
-        if (type == "NORMAL") {
-            entity = NormalLfgUser;
-            target = this.normalLfgUsers;
-        } else if (type == "LONG-TERM") {
-            entity = LongTermLfgUser;
-            target = this.longTermLfgUsers;
-        } else {
-            entity = RegularLfgUser;
-            target = this.regularLfgUsers;
+        const idx = this.normalLfgUsers.findIndex(filter);
+
+        if (idx == -1) {
+            return false;
         }
 
-        const idx = target.findIndex(filter);
+        this.normalLfgUsers.splice(idx, 1);
+        this.deleteUserFromDB(lfgID, userID, NormalLfgUser);
 
-        if (idx == -1) return false;
+        this.typedEmit("NORMAL_LFG_LEAVE", lfgID, userID);
 
+        return true;
+    }
+
+    public leaveLongTermUser(lfgID: number, userID: string) {
+        const filter = (user: { lfg: { id: number }, userID: string, state: State }) =>
+            user.lfg.id == lfgID && user.userID == userID && user.state != "CREATOR";
+
+        const idx = this.longTermLfgUsers.findIndex(filter);
+
+        if (idx == -1) {
+            return false;
+        }
+
+        this.longTermLfgUsers.splice(idx, 1);
+        this.deleteUserFromDB(lfgID, userID, LongTermLfgUser);
+
+        this.typedEmit("LONG_TERM_LFG_LEAVE", lfgID, userID);
+
+        return true;
+    }
+
+    public leaveRegularUser(lfgID: number, userID: string) {
+        const filter = (user: { lfg: { id: number }, userID: string, state: State }) =>
+            user.lfg.id == lfgID && user.userID == userID && user.state != "CREATOR";
+
+        const idx = this.regularLfgUsers.findIndex(filter);
+
+        if (idx == -1) {
+            return false;
+        }
+
+        this.regularLfgUsers.splice(idx, 1);
+        this.deleteUserFromDB(lfgID, userID, RegularLfgUser);
+
+        this.typedEmit("REGULAR_LFG_LEAVE", lfgID, userID);
+
+        return true;
+    }
+
+    private async deleteUserFromDB(lfgID: number, userID: string, entity: any) {
         await getRepository(entity)
             .createQueryBuilder()
             .delete()
             .from(entity)
-            .where("LFG_ID = :lfgID AND USER_ID = :userID", {
+            .where("LFG_ID = :lfgID AND USER_ID = :userID AND (NOT STATE = 'CREATOR')", {
                 lfgID,
                 userID
             })
             .execute();
-
-        return true;
     }
 
     private findNormalUserIndexWithoutCreator(lfgID: number, userID: string): number {
@@ -349,7 +356,7 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
             .set({
                 state
             })
-            .where("LFG_ID = :lfgID AND USER_ID = :userID", {
+            .where("LFG_ID = :lfgID AND USER_ID = :userID AND (NOT STATE = 'CREATOR')", {
                 lfgID,
                 userID
             })

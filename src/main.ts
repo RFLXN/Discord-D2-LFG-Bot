@@ -8,6 +8,8 @@ import { applyOwner, applyToken, getInfo } from "./bot-info";
 import readline from "./util/readline";
 import { disconnectDB } from "./db/typeorm";
 
+console.log("Starting Destiny 2 LFG Discord Bot...");
+
 const client = new Client({
     intents: [
         IntentsBitField.Flags.Guilds,

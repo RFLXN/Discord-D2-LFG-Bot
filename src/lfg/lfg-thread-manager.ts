@@ -17,6 +17,8 @@ type LfgThread = NormalLfgThread | LongTermLfgThread | RegularLfgThread;
 
 type LfgType = "NORMAL" | "LONG-TERM" | "REGULAR";
 
+type LfgUserActionType = "Join" | "Alter" | "Leave";
+
 class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
     private static readonly singleton = new LfgThreadManager();
 
@@ -40,6 +42,48 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
         await this.loadLongTermThreads();
         await this.loadRegularThreads();
         console.log("Successfully Loaded All LFG Threads.");
+    }
+
+    public async sendNormalThreadMessage(lfgID: number, user: { id: string, name: string }, type: LfgUserActionType) {
+        const thread = await this.getRealNormalThread(lfgID);
+        if (type != "Leave") {
+            return thread.send({
+                content: `<@${user.id}> -> ${type}`
+            });
+        }
+
+        await thread.send({
+            content: `${user.name} -> Leave`
+        });
+        await thread.members.remove(user.id);
+    }
+
+    public async sendLongTermThreadMessage(lfgID: number, user: { id: string, name: string }, type: LfgUserActionType) {
+        const thread = await this.getRealLongTermThread(lfgID);
+        if (type != "Leave") {
+            return thread.send({
+                content: `<@${user.id}> -> ${type}`
+            });
+        }
+
+        await thread.send({
+            content: `${user.name} -> Leave`
+        });
+        await thread.members.remove(user.id);
+    }
+
+    public async sendRegularThreadMessage(lfgID: number, user: { id: string, name: string }, type: LfgUserActionType) {
+        const thread = await this.getRealRegularThread(lfgID);
+        if (type != "Leave") {
+            return thread.send({
+                content: `<@${user.id}> -> ${type}`
+            });
+        }
+
+        await thread.send({
+            content: `${user.name} -> Leave`
+        });
+        await thread.members.remove(user.id);
     }
 
     public getNormalThreads() {

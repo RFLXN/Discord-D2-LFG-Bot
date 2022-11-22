@@ -1,17 +1,20 @@
 import {
-    ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder
+    ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, TextChannel
 } from "discord.js";
 import { LocaleString } from "discord-api-types/v10";
+import { APIEmbed } from "discord-api-types/v9";
 import { EventTypes, TypedEventEmitter } from "../util/event-emitter";
 import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
 import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "../db/entity/lfg-user";
-import { getLocalizedString } from "./locale-map";
+import { getLocalizedString, getStrings } from "./locale-map";
 import { getLocale } from "../command/lfg/share";
 import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "../db/entity/lfg-thread";
 import { LongTermLfgMessage, NormalLfgMessage, RegularLfgMessage } from "../db/entity/lfg-message";
 import { getRepository } from "../db/typeorm";
 import LfgMessageCreateOption from "../type/LfgMessageCreateOption";
 import { getActivityMap } from "./activity-map";
+import client from "../main";
+import { LfgUserManager } from "./lfg-user-manager";
 
 interface LfgMessageEvents extends EventTypes {
     newNormalMessage: [];
@@ -21,6 +24,7 @@ type Lfg = NormalLfg | LongTermLfg | RegularLfg;
 type LfgUser = NormalLfgUser | LongTermLfgUser | RegularLfgUser;
 type LfgThread = NormalLfgThread | LongTermLfgThread | RegularLfgThread;
 type LfgType = "NORMAL" | "LONG-TERM" | "REGULAR";
+type LfgMessage = NormalLfgMessage | LongTermLfgMessage | RegularLfgMessage;
 
 interface LfgMessageEmbedCreateOption {
     type: LfgType
@@ -147,6 +151,27 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         return row;
     }
 
+    public async refreshNormalMessages(lfgID: number) {
+        const users = LfgUserManager.instance.getNormalUsers(lfgID);
+        const messages = this.getNormalMessage(lfgID);
+        messages.push(this.getNormalThreadRootMessage(lfgID));
+        await this.refreshMessages(users, messages);
+    }
+
+    public async refreshLongTermMessages(lfgID: number) {
+        const users = LfgUserManager.instance.getLongTermUsers(lfgID);
+        const messages = this.getLongTermMessage(lfgID);
+        messages.push(this.getLongTermThreadRootMessage(lfgID));
+        await this.refreshMessages(users, messages);
+    }
+
+    public async refreshRegularMessages(lfgID: number) {
+        const users = LfgUserManager.instance.getRegularUsers(lfgID);
+        const messages = this.getRegularMessage(lfgID);
+        messages.push(this.getRegularThreadRootMessage(lfgID));
+        await this.refreshMessages(users, messages);
+    }
+
     public async createNormalMessage(option: LfgMessageCreateOption) {
         if (this.getNormalMessage(option.lfgID).length > 5) {
             this.deleteOldestNormalMessage(option.lfgID);
@@ -157,7 +182,7 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
                 lfg: { id: option.lfgID },
                 guildID: option.guildID,
                 channelID: option.channelID,
-                threadID: option.channelID,
+                threadID: option.threadID,
                 messageID: option.messageID,
                 type: option.type,
                 timestamp: new Date().valueOf()
@@ -178,7 +203,7 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
                 lfg: { id: option.lfgID },
                 guildID: option.guildID,
                 channelID: option.channelID,
-                threadID: option.channelID,
+                threadID: option.threadID,
                 messageID: option.messageID,
                 type: option.type,
                 timestamp: new Date().valueOf()
@@ -199,7 +224,7 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
                 lfg: { id: option.lfgID },
                 guildID: option.guildID,
                 channelID: option.channelID,
-                threadID: option.channelID,
+                threadID: option.threadID,
                 messageID: option.messageID,
                 type: option.type,
                 timestamp: new Date().valueOf()
@@ -262,6 +287,104 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         const idx = this.regularMessages.findIndex((msg) => msg.id == id);
         this.regularMessages.splice(idx, 1);
         this.deleteRegularMessageByIdFromDB(id);
+    }
+
+    private async refreshMessages(users: LfgUser[], messages: LfgMessage[]) {
+        const channelIDs = new Set<string>();
+        messages.map((message) => channelIDs.add(message.channelID));
+
+        const guild = await client.guilds.fetch(messages[0].guildID);
+
+        // Processing By Same Channel
+        for (const channelID of channelIDs) {
+            const channelMessages = messages.filter((message) => message.channelID == channelID);
+            const channel = (await guild.channels.fetch(channelID)) as TextChannel;
+
+            const threadIDs = new Set<string>();
+            channelMessages.map((message) => {
+                if (message.threadID) {
+                    threadIDs.add(message.threadID);
+                }
+            });
+
+            // Processing Thread Message By Same Thread
+            for (const threadID of threadIDs) {
+                const threadMessages = channelMessages.filter((message) => message.threadID == threadID);
+                const thread = await channel.threads.fetch(threadID);
+
+                for (const message of threadMessages) {
+                    try {
+                        const realMessage = await thread.messages.fetch(message.messageID);
+                        const embed = realMessage.embeds[0];
+                        const newEmbed = this.createUserRefreshedEmbed(embed, users);
+                        await realMessage.edit({
+                            embeds: [newEmbed]
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+            }
+
+            // Processing Channel Message
+            const channelOnlyMessages = channelMessages.filter((message) => !message.threadID);
+            for (const message of channelOnlyMessages) {
+                try {
+                    const realMessage = await channel.messages.fetch(message.messageID);
+                    const embed = realMessage.embeds[0];
+                    const newEmbed = this.createUserRefreshedEmbed(embed, users);
+                    await realMessage.edit({
+                        embeds: [newEmbed]
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        }
+    }
+
+    private createUserRefreshedEmbed(originEmbed: APIEmbed, users: LfgUser[]) {
+        const newEmbed = new EmbedBuilder();
+        const fields = this.findField(originEmbed.fields);
+        fields.join.value = this.createJoinString(users);
+        fields.alter.value = this.createAlterString(users);
+        newEmbed.setTitle(originEmbed.title)
+            .setDescription(originEmbed.description)
+            .setURL(originEmbed.url)
+            .setFooter(originEmbed.footer)
+            .addFields([
+                fields.join,
+                fields.alter
+            ]);
+
+        return newEmbed;
+    }
+
+    private findField(fields: { name: string, value: string, inline?: boolean }[]) {
+        const joinStrings = getStrings("join");
+        let joinField;
+
+        const alterStrings = getStrings("alter");
+        let alterField;
+
+        fields.map((field) => {
+            for (const joinString of joinStrings) {
+                if (field.name == joinString.value) {
+                    joinField = field;
+                }
+            }
+
+            for (const alterString of alterStrings) {
+                if (field.name == alterString.value) {
+                    alterField = field;
+                }
+            }
+        });
+
+        return {
+            join: joinField as { name: string, value: string, inline?: boolean },
+            alter: alterField as { name: string, value: string, inline?: boolean }
+        };
     }
 
     private createJoinString(users: LfgUser[]) {
