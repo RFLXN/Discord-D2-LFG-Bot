@@ -1,11 +1,13 @@
-import { ChatInputCommandInteraction, ThreadChannel } from "discord.js";
+import { ButtonInteraction, ChatInputCommandInteraction, ThreadChannel } from "discord.js";
 import { ComponentType } from "discord-api-types/v10";
 import { LfgSubCommandExecutor, LfgSubCommandExecutors, LfgSubCommandIdExecutor } from "../lfg";
 import {
     createActivitySelectActionRow,
     createActivitySelectEmbed,
+    createDeleteCheckButton,
     createDescriptionInputEmbed,
-    getLocale
+    getLocale,
+    hasDeletePermission
 } from "./share";
 import { getLocalizedString } from "../../lfg/locale-map";
 import { LfgManager } from "../../lfg/lfg-manager";
@@ -62,11 +64,11 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
         guildID: interaction.guild.id
     });
 
-    await activityAwaited.editReply({
+    activityAwaited.editReply({
         content: `${getLocalizedString(locale, "lfgCreationCompleteMessage")} (ID: ${createdLfg.id})`
     });
 
-    const messageCreatingMessage = await activityAwaited.channel.send({
+    const messageCreatingMessage = activityAwaited.channel.send({
         content: "Creating Info Message... Please Wait."
     });
 
@@ -83,8 +85,8 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
         });
         const buttons = LfgMessageManager.instance.createMessageButton("REGULAR", createdLfg.id, locale);
 
-        await messageCreatingMessage.delete();
-        const lfgMessage = await messageCreatingMessage.channel.send({
+        await (await messageCreatingMessage).delete();
+        const lfgMessage = await (await messageCreatingMessage).channel.send({
             embeds: [embed],
             components: [buttons]
         });
@@ -106,12 +108,105 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
     LfgThreadManager.instance.typedOn("newRegularThread", afterCreatedListener);
 };
 
-const doGetInfo: LfgSubCommandIdExecutor = async (interaction: ChatInputCommandInteraction, lfgId: number) => {
+const doGetInfo: LfgSubCommandIdExecutor = async (interaction: ChatInputCommandInteraction, lfgID: number) => {
+    const locale = getLocale(interaction.locale);
+    const lfg = LfgManager.instance.getRegularLfg(lfgID);
 
+    if (!lfg) {
+        await interaction.reply({
+            content: getLocalizedString(locale, "invalidLfg"),
+            ephemeral: true
+        });
+    }
+
+    const messageManager = LfgMessageManager.instance;
+    const users = LfgUserManager.instance.getRegularUsers(lfgID);
+    const thread = LfgThreadManager.instance.getRegularThread(lfgID);
+
+    const embed = messageManager.createMessageEmbed({
+        lfg,
+        locale,
+        users,
+        thread,
+        type: "REGULAR"
+    });
+    const button = messageManager.createMessageButton("REGULAR", lfgID, locale);
+
+    const message = await interaction.reply({
+        embeds: [embed],
+        components: [button],
+        fetchReply: true
+    });
+
+    await messageManager.createRegularMessage({
+        type: "NORMAL",
+        guildID: message.guild.id,
+        channelID: message.channel.isThread()
+            ? message.channel.parent.id : message.channel.id,
+        messageID: message.id,
+        lfgID,
+        threadID: message.channel.isThread()
+            ? message.channel.id : undefined
+    });
 };
 
-const doDelete: LfgSubCommandIdExecutor = async (interaction: ChatInputCommandInteraction, lfgId: number) => {
+const doDelete: LfgSubCommandIdExecutor = async (interaction: ChatInputCommandInteraction, lfgID: number) => {
+    const locale = getLocale(interaction.locale);
+    const lfg = LfgManager.instance.getRegularLfg(lfgID);
 
+    if (!lfg) {
+        await interaction.reply({
+            content: getLocalizedString(locale, "invalidLfg"),
+            ephemeral: true
+        });
+        return;
+    }
+
+    const creator = LfgUserManager.instance.getRegularUsers(lfgID)
+        .find((user) => user.state == "CREATOR");
+
+    const permission = await hasDeletePermission(interaction, creator);
+
+    if (!permission) {
+        await interaction.reply({
+            content: getLocalizedString(locale, "needPermissionToDeleteLfg"),
+            ephemeral: true
+        });
+        return;
+    }
+
+    const checkMessage = await interaction.reply({
+        content: `${getLocalizedString(locale, "checkDeletion")} (ID: ${lfgID})`,
+        fetchReply: true,
+        components: [createDeleteCheckButton(interaction.id)]
+    });
+
+    const clickedButton = await checkMessage.awaitMessageComponent<ComponentType.Button>({
+        filter: (i: ButtonInteraction) => i.user.id == interaction.user.id
+            && i.customId.startsWith(`lfg-delete-check-${interaction.id}-`),
+        time: 1000 * 60 * 3
+    });
+
+    await checkMessage.delete();
+
+    if (clickedButton.customId.endsWith("no")) {
+        await clickedButton.reply({
+            content: `${getLocalizedString(locale, "cancelDeletion")}`
+        });
+        return;
+    }
+
+    const result = LfgManager.instance.deleteRegularLfg(lfgID);
+
+    if (result) {
+        await clickedButton.reply({
+            content: `${getLocalizedString(locale, "lfgDeleted")} (ID: ${lfgID})`
+        });
+    } else {
+        await clickedButton.reply({
+            content: `${getLocalizedString(locale, "failedToDeleteLfg")} (ID: ${lfgID})`
+        });
+    }
 };
 
 const doEdit: LfgSubCommandIdExecutor = async (interaction: ChatInputCommandInteraction, lfgId: number) => {

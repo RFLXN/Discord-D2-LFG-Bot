@@ -1,11 +1,11 @@
-import { getQueryBuilder } from "./db/typeorm";
+import { getQueryBuilder, getRepository } from "./db/typeorm";
 import { BotAdmin } from "./db/entity/bot-admin";
 import { getInfo } from "./bot-info";
 
 const getBotAdmins = async (): Promise<BotAdmin[]> => {
     console.log("Querying All Bot Administrators.");
-    const queried = await getQueryBuilder(BotAdmin)
-        .getMany();
+    const queried = await getRepository(BotAdmin)
+        .find();
     console.log("Bot Administrators Successfully Queried.");
     return queried;
 };

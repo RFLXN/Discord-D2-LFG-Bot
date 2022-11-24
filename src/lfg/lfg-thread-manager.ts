@@ -194,67 +194,25 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
         };
     }
 
-    public deleteNormalThread(lfgID: number) {
+    public deleteCachedNormalThread(lfgID: number) {
         const idx = this.normalThreads.findIndex((thread) => thread.lfg.id == lfgID);
-
-        if (idx == -1) return false;
-
-        const threadId = this.normalThreads[idx].id;
-        this.normalThreads.splice(idx, 1);
-        this.deleteThread("NORMAL", threadId);
-
-        return true;
+        if (idx != -1) {
+            this.normalThreads.splice(idx, 1);
+        }
     }
 
-    public deleteLongTermThread(lfgID: number) {
+    public deleteCachedLongTermThread(lfgID: number) {
         const idx = this.longTermThreads.findIndex((thread) => thread.lfg.id == lfgID);
-
-        if (idx == -1) return false;
-
-        const threadId = this.longTermThreads[idx].id;
-        this.longTermThreads.splice(idx, 1);
-        this.deleteThread("LONG-TERM", threadId);
-
-        return true;
+        if (idx != -1) {
+            this.longTermThreads.splice(idx, 1);
+        }
     }
 
-    public deleteRegularThread(lfgID: number) {
+    public deleteCachedRegularThread(lfgID: number) {
         const idx = this.regularThreads.findIndex((thread) => thread.lfg.id == lfgID);
-
-        if (idx == -1) return false;
-
-        const threadId = this.regularThreads[idx].id;
-        this.regularThreads.splice(idx, 1);
-        this.deleteThread("REGULAR", threadId);
-
-        return true;
-    }
-
-    public async deleteRealNormalThread(lfgID: number) {
-        const lfg = LfgManager.instance.getNormalLfg(lfgID);
-        const threadEntity = this.normalThreads.find((thread) => thread.lfg.id == lfgID);
-        const channel = await this.getChannelFromLfg("NORMAL", lfg);
-        const thread = await channel.threads.fetch(threadEntity.threadID);
-
-        await thread.delete();
-    }
-
-    public async deleteRealLongTermThread(lfgID: number) {
-        const lfg = LfgManager.instance.getLongTermLfg(lfgID);
-        const threadEntity = this.longTermThreads.find((thread) => thread.lfg.id == lfgID);
-        const channel = await this.getChannelFromLfg("LONG-TERM", lfg);
-        const thread = await channel.threads.fetch(threadEntity.threadID);
-
-        await thread.delete();
-    }
-
-    public async deleteRealRegularThread(lfgID: number) {
-        const lfg = LfgManager.instance.getRegularLfg(lfgID);
-        const threadEntity = this.regularThreads.find((thread) => thread.lfg.id == lfgID);
-        const channel = await this.getChannelFromLfg("REGULAR", lfg);
-        const thread = await channel.threads.fetch(threadEntity.threadID);
-
-        await thread.delete();
+        if (idx != -1) {
+            this.regularThreads.splice(idx, 1);
+        }
     }
 
     public createThreadInitMessage(type: LfgType, lfg: NormalLfg | LongTermLfg | RegularLfg, creatorID: string) {

@@ -99,6 +99,7 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
         if (idx == -1) {
             const user = await this.insertNormalUserToDB(option, "JOIN");
             this.normalLfgUsers.push(user);
+            this.typedEmit("NORMAL_LFG_JOIN", this.normalLfgUsers[idx]);
             return true;
         }
         if (this.normalLfgUsers[idx].state == "JOIN") {
@@ -117,6 +118,7 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
         if (idx == -1) {
             const user = await this.insertLongTermUserToDB(option, "JOIN");
             this.longTermLfgUsers.push(user);
+            this.typedEmit("LONG_TERM_LFG_JOIN", this.longTermLfgUsers[idx]);
             return true;
         }
         if (this.longTermLfgUsers[idx].state == "JOIN") {
@@ -135,9 +137,10 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
         if (idx == -1) {
             const user = await this.insertRegularUserToDB(option, "JOIN");
             this.regularLfgUsers.push(user);
+            this.typedEmit("REGULAR_LFG_JOIN", this.regularLfgUsers[idx]);
             return true;
         }
-        if (this.normalLfgUsers[idx].state == "JOIN") {
+        if (this.regularLfgUsers[idx].state == "JOIN") {
             return false;
         }
         this.regularLfgUsers[idx].state = "JOIN";
@@ -153,6 +156,7 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
         if (idx == -1) {
             const user = await this.insertNormalUserToDB(option, "ALTER");
             this.normalLfgUsers.push(user);
+            this.typedEmit("NORMAL_LFG_ALTER", this.normalLfgUsers[idx]);
             return true;
         }
         if (this.normalLfgUsers[idx].state == "ALTER") {
@@ -171,6 +175,7 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
         if (idx == -1) {
             const user = await this.insertLongTermUserToDB(option, "ALTER");
             this.longTermLfgUsers.push(user);
+            this.typedEmit("LONG_TERM_LFG_ALTER", this.longTermLfgUsers[idx]);
             return true;
         }
         if (this.longTermLfgUsers[idx].state == "ALTER") {
@@ -189,6 +194,7 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
         if (idx == -1) {
             const user = await this.insertRegularUserToDB(option, "ALTER");
             this.regularLfgUsers.push(user);
+            this.typedEmit("REGULAR_LFG_ALTER", this.regularLfgUsers[idx]);
             return true;
         }
         if (this.regularLfgUsers[idx].state == "ALTER") {
@@ -254,6 +260,18 @@ class LfgUserManager extends TypedEventEmitter<LfgUserEvents> {
         this.typedEmit("REGULAR_LFG_LEAVE", lfgID, userID);
 
         return true;
+    }
+
+    public deleteCachedNormalUser(lfgID: number) {
+        this.normalLfgUsers = this.normalLfgUsers.filter((user) => user.lfg.id != lfgID);
+    }
+
+    public deleteCachedLongTermUser(lfgID: number) {
+        this.longTermLfgUsers = this.longTermLfgUsers.filter((user) => user.lfg.id != lfgID);
+    }
+
+    public deleteCachedRegularUser(lfgID: number) {
+        this.regularLfgUsers = this.regularLfgUsers.filter((user) => user.lfg.id != lfgID);
     }
 
     private async deleteUserFromDB(lfgID: number, userID: string, entity: any) {

@@ -30,6 +30,12 @@ interface LfgLocaleMapElements {
     joined: string,
     alreadyAltered: string,
     altered: string,
+    invalidLfg: string,
+    needPermissionToDeleteLfg: string,
+    checkDeletion: string,
+    cancelDeletion: string,
+    lfgDeleted: string,
+    failedToDeleteLfg: string
 }
 
 type BaseLfgLocaleMap = Partial<Record<LocaleString, LfgLocaleMapElements>>;

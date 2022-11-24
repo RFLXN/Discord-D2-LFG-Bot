@@ -134,15 +134,15 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
             typeStr = "regular";
         }
 
-        join.setCustomId(`lfg-${typeStr}-${lfgID}-join`)
+        join.setCustomId(`lfgmsgbtn-${typeStr}-${lfgID}-join`)
             .setLabel(getLocalizedString(localeMapKey, "join"))
             .setStyle(ButtonStyle.Success);
 
-        alter.setCustomId(`lfg-${typeStr}-${lfgID}-alter`)
+        alter.setCustomId(`lfgmsgbtn-${typeStr}-${lfgID}-alter`)
             .setLabel(getLocalizedString(localeMapKey, "alter"))
             .setStyle(ButtonStyle.Primary);
 
-        leave.setCustomId(`lfg-${typeStr}-${lfgID}-leave`)
+        leave.setCustomId(`lfgmsgbtn-${typeStr}-${lfgID}-leave`)
             .setLabel(getLocalizedString(localeMapKey, "leave"))
             .setStyle(ButtonStyle.Danger);
 
@@ -287,6 +287,18 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         const idx = this.regularMessages.findIndex((msg) => msg.id == id);
         this.regularMessages.splice(idx, 1);
         this.deleteRegularMessageByIdFromDB(id);
+    }
+
+    public deleteCachedNormalMessage(lfgID: number) {
+        this.normalMessages = this.normalMessages.filter((msg) => msg.lfg.id != lfgID);
+    }
+
+    public deleteCachedLongTermMessage(lfgID: number) {
+        this.longTermMessages = this.longTermMessages.filter((msg) => msg.lfg.id != lfgID);
+    }
+
+    public deleteCachedRegularMessage(lfgID: number) {
+        this.regularMessages = this.regularMessages.filter((msg) => msg.lfg.id != lfgID);
     }
 
     private async refreshMessages(users: LfgUser[], messages: LfgMessage[]) {

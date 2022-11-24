@@ -233,7 +233,7 @@ const doRegular = async (interaction: ButtonInteraction, lfgID: number, action: 
 };
 
 const handleButton = async (interaction: ButtonInteraction) => {
-    const token = interaction.customId.replace("lfg-", "")
+    const token = interaction.customId.replace("lfgmsgbtn-", "")
         .split("-");
     const type = token[0] as LfgType;
     const lfgID = Number(token[1]);

@@ -57,7 +57,7 @@ const onInteractionCreate = async (interaction: Interaction) => {
     if (interaction.isButton()) {
         const i = interaction as ButtonInteraction;
 
-        if (i.customId.startsWith("lfg")) {
+        if (i.customId.startsWith("lfgmsgbtn")) {
             try {
                 const start = new Date();
                 console.log(`Executing Button Interaction. (${interaction.customId} / ${interaction.id})`);

@@ -28,7 +28,13 @@
     "alreadyJoined": "You Are Already Joined in This Looking-For-Group.",
     "joined": "Join in This Looking-For-Group.",
     "alreadyAltered": "You Are Already Altered in This Looking-For-Group.",
-    "altered": "Alter in This Looking-For-Group."
+    "altered": "Alter in This Looking-For-Group.",
+    "invalidLfg": "Invalid Looking-For-Party.",
+    "needPermissionToDeleteLfg": "You Don't Have Permission for Delete This Looking-For-Group.",
+    "checkDeletion": "Are You Sure You Want To Delete This Looking-For-Group?",
+    "cancelDeletion": "Canceled to Delete Looking-For-Group.",
+    "lfgDeleted": "Successfully Delete Looking-For-Group.",
+    "failedToDeleteLfg": "Failed to Delete Looking-For-Group."
   },
   "ko": {
     "activityCreateSelectionTitle": "파티모집 생성",
@@ -59,7 +65,13 @@
     "alreadyJoined": "이미 참여중입니다.",
     "joined": "이 파티모집에 참여합니다.",
     "alreadyAltered": "이미 이 파티모집에 참여 여부 불분명으로 참여중입니다.",
-    "altered": "이 파티모집에 참여 여부 불분명으로 참여합니다."
+    "altered": "이 파티모집에 참여 여부 불분명으로 참여합니다.",
+    "invalidLfg": "존재하지 않는 파티모집입니다.",
+    "needPermissionToDeleteLfg": "이 파티모집을 삭제하기 위한 권한이 부족합니다.",
+    "checkDeletion": "정말로 이 파티모집을 삭제하시겠습니까?",
+    "cancelDeletion": "파티모집 삭제를 취소합니다.",
+    "lfgDeleted": "파티모집을 삭제했습니다.",
+    "failedToDeleteLfg": "파티모집 삭제에 실패했습니다."
   },
   "ja": {
     "activityCreateSelectionTitle": "パーティ募集作成",
@@ -90,6 +102,12 @@
     "alreadyJoined": "このパーティ募集にすでに参加しています。",
     "joined": "このパーティ募集に参加します。",
     "alreadyAltered": "このパーティ募集にすでに参加不明で入っています。",
-    "altered": "このパーティ募集に参加不明で入ります。"
+    "altered": "このパーティ募集に参加不明で入ります。",
+    "invalidLfg": "間違ったパーティ募集IDです。",
+    "needPermissionToDeleteLfg": "このパーティ募集を削除する権限が不足です。",
+    "checkDeletion": "本当にこのパーティ募集を削除しますか？",
+    "cancelDeletion": "削除をキャンセルします。",
+    "lfgDeleted": "パーティ募集を削除しました。",
+    "failedToDeleteLfg": "パーティ募集の削除を失敗しました。"
   }
 }

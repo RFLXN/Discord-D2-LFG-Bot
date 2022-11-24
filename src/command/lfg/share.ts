@@ -1,7 +1,11 @@
 import {
     ActionRowBuilder,
     ActionRowModalData,
+    ButtonBuilder,
+    ButtonStyle,
+    ChatInputCommandInteraction,
     EmbedBuilder,
+    GuildMember,
     ModalBuilder,
     SelectMenuBuilder,
     TextInputBuilder,
@@ -12,6 +16,7 @@ import { LocaleString } from "discord-api-types/v10";
 import { getLocalizedString } from "../../lfg/locale-map";
 import { LfgLocaleMap } from "../../type/LfgLocaleMap";
 import { getActivityMap } from "../../lfg/activity-map";
+import { isAdmin } from "../../bot-admin";
 
 const getLocale = (locale?: LocaleString): keyof LfgLocaleMap => {
     if (!locale || locale == "en-US") return "default";
@@ -96,11 +101,40 @@ const createDescriptionInputEmbed = (locale: keyof LfgLocaleMap, type: "create" 
     return embed;
 };
 
+const createDeleteCheckButton = (id: string) => {
+    const row = new ActionRowBuilder<ButtonBuilder>();
+    const yes = new ButtonBuilder()
+        .setStyle(ButtonStyle.Success)
+        .setLabel("⭕")
+        .setCustomId(`lfg-delete-check-${id}-yes`);
+    const no = new ButtonBuilder()
+        .setStyle(ButtonStyle.Danger)
+        .setLabel("❌")
+        .setCustomId(`lfg-delete-check-${id}-no`);
+    row.addComponents(yes, no);
+
+    return row;
+};
+
+const hasDeletePermission = async (interaction: ChatInputCommandInteraction, creator: { userID: string }) => {
+    if (await isAdmin(interaction.user.id)) {
+        return true;
+    }
+
+    if ((interaction.member as GuildMember)?.permissions?.has("Administrator")) {
+        return true;
+    }
+
+    return interaction.user.id == creator.userID;
+};
+
 export {
     getLocale,
     createActivitySelectActionRow,
     createActivitySelectEmbed,
     createLfgDataModal,
     flattenModalResponseComponent,
-    createDescriptionInputEmbed
+    createDescriptionInputEmbed,
+    createDeleteCheckButton,
+    hasDeletePermission
 };

@@ -6,6 +6,7 @@ import LfgThreadManager from "./lfg-thread-manager";
 import { LfgMessageManager } from "./lfg-message-manager";
 
 const newNormalLfgHandler = async (creator: LfgCreator, lfg: NormalLfg) => {
+    console.log(`Normal LFG Created: ${lfg.id}`);
     const userManager = LfgUserManager.instance;
     await userManager.newNormalCreator({
         lfgID: lfg.id,
@@ -48,6 +49,7 @@ const newNormalLfgHandler = async (creator: LfgCreator, lfg: NormalLfg) => {
 };
 
 const newLongTermLfgHandler = async (creator: LfgCreator, lfg: LongTermLfg) => {
+    console.log(`LongTerm LFG Created: ${lfg.id}`);
     const userManager = LfgUserManager.instance;
     await userManager.newLongTermCreator({
         lfgID: lfg.id,
@@ -90,6 +92,7 @@ const newLongTermLfgHandler = async (creator: LfgCreator, lfg: LongTermLfg) => {
 };
 
 const newRegularLfgHandler = async (creator: LfgCreator, lfg: RegularLfg) => {
+    console.log(`Regular LFG Created: ${lfg.id}`);
     const userManager = LfgUserManager.instance;
     await userManager.newRegularCreator({
         lfgID: lfg.id,
@@ -131,10 +134,46 @@ const newRegularLfgHandler = async (creator: LfgCreator, lfg: RegularLfg) => {
     });
 };
 
+const deleteNormalLfgHandler = async (lfgID: number) => {
+    LfgMessageManager.instance.deleteCachedNormalMessage(lfgID);
+    LfgUserManager.instance.deleteCachedNormalUser(lfgID);
+    try {
+        const thread = await LfgThreadManager.instance.getRealNormalThread(lfgID);
+        await thread.delete();
+    } catch (ignore) {
+    }
+    LfgThreadManager.instance.deleteCachedNormalThread(lfgID);
+};
+
+const deleteLongTermLfgHandler = async (lfgID: number) => {
+    LfgMessageManager.instance.deleteCachedLongTermMessage(lfgID);
+    LfgUserManager.instance.deleteCachedLongTermUser(lfgID);
+    try {
+        const thread = await LfgThreadManager.instance.getRealLongTermThread(lfgID);
+        await thread.delete();
+    } catch (ignore) {
+    }
+    LfgThreadManager.instance.deleteCachedLongTermThread(lfgID);
+};
+
+const deleteRegularLfgHandler = async (lfgID: number) => {
+    LfgMessageManager.instance.deleteCachedRegularMessage(lfgID);
+    LfgUserManager.instance.deleteCachedRegularUser(lfgID);
+    try {
+        const thread = await LfgThreadManager.instance.getRealRegularThread(lfgID);
+        await thread.delete();
+    } catch (ignore) {
+    }
+    LfgThreadManager.instance.deleteCachedRegularThread(lfgID);
+};
+
 const applyEventHandlers = () => {
     LfgManager.instance.typedOn("NEW_NORMAL_LFG", newNormalLfgHandler);
     LfgManager.instance.typedOn("NEW_LONG_TERM_LFG", newLongTermLfgHandler);
     LfgManager.instance.typedOn("NEW_REGULAR_LFG", newRegularLfgHandler);
+    LfgManager.instance.typedOn("DELETE_NORMAL_LFG", deleteNormalLfgHandler);
+    LfgManager.instance.typedOn("DELETE_LONG_TERM_LFG", deleteLongTermLfgHandler);
+    LfgManager.instance.typedOn("DELETE_REGULAR_LFG", deleteRegularLfgHandler);
 };
 
 export default applyEventHandlers;
