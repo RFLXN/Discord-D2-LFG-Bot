@@ -89,7 +89,7 @@ const doNormal = async (interaction: ButtonInteraction, lfgID: number, action: L
         }, "Alter");
     }
 
-    await LfgMessageManager.instance.refreshNormalMessages(lfgID);
+    await LfgMessageManager.instance.refreshNormalMessageUser(lfgID);
 };
 
 const doLongTerm = async (interaction: ButtonInteraction, lfgID: number, action: LfgAction) => {
@@ -159,7 +159,7 @@ const doLongTerm = async (interaction: ButtonInteraction, lfgID: number, action:
         }, "Alter");
     }
 
-    await LfgMessageManager.instance.refreshLongTermMessages(lfgID);
+    await LfgMessageManager.instance.refreshLongTermMessageUser(lfgID);
 };
 
 const doRegular = async (interaction: ButtonInteraction, lfgID: number, action: LfgAction) => {
@@ -229,7 +229,7 @@ const doRegular = async (interaction: ButtonInteraction, lfgID: number, action: 
         }, "Alter");
     }
 
-    await LfgMessageManager.instance.refreshRegularMessages(lfgID);
+    await LfgMessageManager.instance.refreshRegularMessageUser(lfgID);
 };
 
 const handleButton = async (interaction: ButtonInteraction) => {

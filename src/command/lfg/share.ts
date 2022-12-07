@@ -13,6 +13,7 @@ import {
     TextInputStyle
 } from "discord.js";
 import { LocaleString } from "discord-api-types/v10";
+import moment from "moment/moment";
 import { getLocalizedString } from "../../lfg/locale-map";
 import { LfgLocaleMap } from "../../type/LfgLocaleMap";
 import { getActivityMap } from "../../lfg/activity-map";
@@ -128,6 +129,19 @@ const hasDeletePermission = async (interaction: ChatInputCommandInteraction, cre
     return interaction.user.id == creator.userID;
 };
 
+const parseDate = (dateString: string) => {
+    if (dateString.replaceAll("\n", "")
+        .toLowerCase() == "now") {
+        return new Date();
+    }
+    try {
+        return moment(dateString, "YYYY-MM-DD HH:mm")
+            .toDate();
+    } catch (e) {
+        return NaN;
+    }
+};
+
 export {
     getLocale,
     createActivitySelectActionRow,
@@ -136,5 +150,6 @@ export {
     flattenModalResponseComponent,
     createDescriptionInputEmbed,
     createDeleteCheckButton,
-    hasDeletePermission
+    hasDeletePermission,
+    parseDate
 };

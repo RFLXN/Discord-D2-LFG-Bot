@@ -7,6 +7,7 @@ import {
 import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
 import { getQueryBuilder, getRepository } from "../db/typeorm";
 import { EventTypes, TypedEventEmitter } from "../util/event-emitter";
+import omitProperty from "../util/omit-property";
 
 interface LfgEvents extends EventTypes {
     NEW_NORMAL_LFG: [creator: LfgCreator, lfg: NormalLfg];
@@ -46,6 +47,18 @@ class LfgManager extends TypedEventEmitter<LfgEvents> {
         await this.loadAllLongTermLfg();
         await this.loadAllRegularLfg();
         console.log("Successfully Loaded All LFG.");
+    }
+
+    public getAllNormalLfg() {
+        return this.normalLfg;
+    }
+
+    public getAllLongTermLfg() {
+        return this.longTermLfg;
+    }
+
+    public getAllRegularLfg() {
+        return this.regularLfg;
     }
 
     public async createNormalLfg(creator: LfgCreator, option: NormalLfgCreateOption): Promise<NormalLfg> {
@@ -289,7 +302,7 @@ class LfgManager extends TypedEventEmitter<LfgEvents> {
     private async editNormalLfgFromDB(id: number, options: Partial<Omit<NormalLfg, "guildID" | "id">>) {
         await getQueryBuilder(NormalLfg)
             .update()
-            .set({ ...options })
+            .set({ timestamp: options.date.valueOf(), ...omitProperty(options, "date") })
             .where("ID = :id", { id })
             .execute();
     }
@@ -297,7 +310,7 @@ class LfgManager extends TypedEventEmitter<LfgEvents> {
     private async editLongTermLfgFromDB(id: number, options: Partial<Omit<LongTermLfg, "guildID" | "id">>) {
         await getQueryBuilder(LongTermLfg)
             .update()
-            .set({ ...options })
+            .set({ timestamp: options.date.valueOf(), ...omitProperty(options, "date") })
             .where("ID = :id", { id })
             .execute();
     }

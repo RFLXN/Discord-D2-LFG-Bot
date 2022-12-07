@@ -6,6 +6,7 @@ import client from "../main";
 import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
 import { getRepository } from "../db/typeorm";
 import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "../db/entity/lfg-thread";
+import { LfgUserManager } from "./lfg-user-manager";
 
 interface LfgThreadEvents extends EventTypes {
     newNormalThread: [entity: NormalLfgThread, real: ThreadChannel];
@@ -228,16 +229,46 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
 
         s += `ID: ${lfg.id}\n`;
         s += `Creator: <@${creatorID}>\n`;
-        s += `Activity: ${lfg.activityName}\n`;
-        s += `Description: ${lfg.description}`;
-
-        if (type == "NORMAL" || type == "LONG-TERM") {
-            const timestamp = (lfg as NormalLfg | LongTermLfg).date.valueOf();
-            const val = Math.floor(timestamp / 1000);
-            s += `\nDatetime: <t:${val}:F>`;
-        }
 
         return s;
+    }
+
+    public async refreshNormalThread(lfgID: number) {
+        const lfg = LfgManager.instance.getNormalLfg(lfgID);
+        await this.refreshThread("NORMAL", lfg);
+    }
+
+    public async refreshLongTermThread(lfgID: number) {
+        const lfg = LfgManager.instance.getLongTermLfg(lfgID);
+        await this.refreshThread("LONG-TERM", lfg);
+    }
+
+    public async refreshRegularThread(lfgID: number) {
+        const lfg = LfgManager.instance.getRegularLfg(lfgID);
+        await this.refreshThread("REGULAR", lfg);
+    }
+
+    private async refreshThread(type: LfgType, lfg: NormalLfg | LongTermLfg | RegularLfg) {
+        let thread;
+        let creatorID;
+
+        if (type == "NORMAL") {
+            thread = await this.getRealNormalThread(lfg.id);
+            creatorID = LfgUserManager.instance.getNormalUsers(lfg.id)
+                .find((u) => u.state == "CREATOR").userID;
+        } else if (type == "LONG-TERM") {
+            thread = await this.getRealLongTermThread(lfg.id);
+            creatorID = LfgUserManager.instance.getLongTermUsers(lfg.id)
+                .find((u) => u.state == "CREATOR").userID;
+        } else {
+            thread = await this.getRealRegularThread(lfg.id);
+            creatorID = LfgUserManager.instance.getRegularUsers(lfg.id)
+                .find((u) => u.state == "CREATOR").userID;
+        }
+
+        await thread.edit({
+            name: this.createLfgThreadName(type, lfg)
+        });
     }
 
     private async createThread(
@@ -246,6 +277,13 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
         type: LfgType
     )
         : Promise<ThreadChannel> {
+        return channel.threads.create({
+            name: this.createLfgThreadName(type, lfg),
+            autoArchiveDuration: ThreadAutoArchiveDuration.OneDay
+        });
+    }
+
+    private createLfgThreadName(type: LfgType, lfg: NormalLfg | LongTermLfg | RegularLfg) {
         let head;
         if (type == "NORMAL") {
             head = "N";
@@ -254,11 +292,9 @@ class LfgThreadManager extends TypedEventEmitter<LfgThreadEvents> {
         } else {
             head = "R";
         }
-        return channel.threads.create({
-            name: `${head}${lfg.id}-${lfg.activityName.replaceAll(" ", "-")
-                .replaceAll("---", "-")}`,
-            autoArchiveDuration: ThreadAutoArchiveDuration.OneDay
-        });
+
+        return `${head}${lfg.id}-${lfg.activityName.replaceAll(" ", "-")
+            .replaceAll("---", "-")}`;
     }
 
     private async getChannelFromLfg(type: LfgType, lfg: { guildID: string }) {

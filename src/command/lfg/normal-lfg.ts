@@ -1,4 +1,10 @@
-import { ButtonInteraction, ChatInputCommandInteraction, ThreadChannel } from "discord.js";
+import {
+    ButtonInteraction,
+    ChatInputCommandInteraction,
+    ModalSubmitInteraction,
+    SelectMenuInteraction,
+    ThreadChannel
+} from "discord.js";
 import { ComponentType } from "discord-api-types/v10";
 import moment from "moment";
 import { LfgSubCommandExecutor, LfgSubCommandExecutors, LfgSubCommandIdExecutor } from "../lfg";
@@ -9,7 +15,8 @@ import {
     createLfgDataModal,
     flattenModalResponseComponent,
     getLocale,
-    hasDeletePermission
+    hasDeletePermission,
+    parseDate
 } from "./share";
 import { LfgManager } from "../../lfg/lfg-manager";
 import { getLocalizedString } from "../../lfg/locale-map";
@@ -227,8 +234,75 @@ const doDelete: LfgSubCommandIdExecutor = async (interaction: ChatInputCommandIn
     }
 };
 
-const doEdit: LfgSubCommandIdExecutor = async (interaction: ChatInputCommandInteraction, lfgId: number) => {
+const doEdit: LfgSubCommandIdExecutor = async (interaction: ChatInputCommandInteraction, lfgID: number) => {
+    const locale = getLocale(interaction.locale);
+    const lfg = LfgManager.instance.getNormalLfg(lfgID);
 
+    if (!lfg) {
+        await interaction.reply({
+            content: getLocalizedString(locale, "invalidLfg")
+        });
+        return;
+    }
+
+    const activitySelectMessage = await interaction.reply({
+        fetchReply: true,
+        embeds: [createActivitySelectEmbed(locale, "edit")],
+        components: [createActivitySelectActionRow(locale, interaction.id)]
+    });
+
+    const activityAwaited = await activitySelectMessage.awaitMessageComponent<ComponentType.SelectMenu>({
+        filter: (i: SelectMenuInteraction) =>
+            i.user.id == interaction.user.id
+            && i.customId == `activity-select-${interaction.id}`,
+        time: 1000 * 60 * 3,
+        dispose: true
+    });
+
+    await activitySelectMessage.delete();
+
+    const activity = activityAwaited.values[0];
+
+    const modal = await activityAwaited.showModal(createLfgDataModal(locale, interaction.id, "edit"));
+
+    const modalAwaited = await activityAwaited.awaitModalSubmit({
+        filter: (i: ModalSubmitInteraction) =>
+            i.user.id == interaction.user.id
+            && i.customId == `lfg-modal-${interaction.id}`,
+        time: 1000 * 60 * 3,
+        dispose: true
+    });
+
+    const flatComponent = flattenModalResponseComponent(modalAwaited.components);
+    const description = flatComponent.find((component) =>
+        component.customId == `lfg-modal-description-${interaction.id}`).value;
+    const dateString = flatComponent.find((component) =>
+        component.customId == `lfg-modal-date-${interaction.id}`).value;
+
+    const date = parseDate(dateString);
+
+    if (!(date instanceof Date) && Number.isNaN(date)) {
+        await modalAwaited.reply({
+            content: `Error: '${dateString.replaceAll("\n", "")}' is Invalid Format.`
+        });
+        return;
+    }
+
+    const result = LfgManager.instance.editNormalLfg(lfgID, {
+        date: date as Date,
+        description,
+        activityName: activity
+    });
+
+    if (result) {
+        await modalAwaited.reply({
+            content: `${getLocalizedString(locale, "lfgEditCompletionMessage")} (ID: ${lfgID})`
+        });
+    } else {
+        await modalAwaited.reply({
+            content: `${getLocalizedString(locale, "lfgEditFailedMessage")} (ID: ${lfgID})`
+        });
+    }
 };
 
 const normalLfgExecutors: LfgSubCommandExecutors = {

@@ -35,7 +35,9 @@ interface LfgLocaleMapElements {
     checkDeletion: string,
     cancelDeletion: string,
     lfgDeleted: string,
-    failedToDeleteLfg: string
+    failedToDeleteLfg: string,
+    lfgEditCompletionMessage: string,
+    lfgEditFailedMessage: string
 }
 
 type BaseLfgLocaleMap = Partial<Record<LocaleString, LfgLocaleMapElements>>;

@@ -15,6 +15,8 @@ import LfgMessageCreateOption from "../type/LfgMessageCreateOption";
 import { getActivityMap } from "./activity-map";
 import client from "../main";
 import { LfgUserManager } from "./lfg-user-manager";
+import { LfgManager } from "./lfg-manager";
+import LfgThreadManager from "./lfg-thread-manager";
 
 interface LfgMessageEvents extends EventTypes {
     newNormalMessage: [];
@@ -151,25 +153,64 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         return row;
     }
 
-    public async refreshNormalMessages(lfgID: number) {
+    public async refreshNormalMessageUser(lfgID: number) {
         const users = LfgUserManager.instance.getNormalUsers(lfgID);
         const messages = this.getNormalMessage(lfgID);
         messages.push(this.getNormalThreadRootMessage(lfgID));
         await this.refreshMessages(users, messages);
     }
 
-    public async refreshLongTermMessages(lfgID: number) {
+    public async refreshLongTermMessageUser(lfgID: number) {
         const users = LfgUserManager.instance.getLongTermUsers(lfgID);
         const messages = this.getLongTermMessage(lfgID);
         messages.push(this.getLongTermThreadRootMessage(lfgID));
         await this.refreshMessages(users, messages);
     }
 
-    public async refreshRegularMessages(lfgID: number) {
+    public async refreshRegularMessageUser(lfgID: number) {
         const users = LfgUserManager.instance.getRegularUsers(lfgID);
         const messages = this.getRegularMessage(lfgID);
         messages.push(this.getRegularThreadRootMessage(lfgID));
         await this.refreshMessages(users, messages);
+    }
+
+    public async refreshNormalMessage(lfgID: number) {
+        const lfg = LfgManager.instance.getNormalLfg(lfgID);
+        const users = LfgUserManager.instance.getNormalUsers(lfgID);
+        const thread = LfgThreadManager.instance.getNormalThread(lfgID);
+        const messages = this.getNormalMessage(lfgID);
+        messages.push(this.getNormalThreadRootMessage(lfgID));
+
+        await this.refreshMessages(users, messages, {
+            lfg,
+            thread
+        });
+    }
+
+    public async refreshLongTermMessage(lfgID: number) {
+        const lfg = LfgManager.instance.getLongTermLfg(lfgID);
+        const users = LfgUserManager.instance.getLongTermUsers(lfgID);
+        const thread = LfgThreadManager.instance.getLongTermThread(lfgID);
+        const messages = this.getLongTermMessage(lfgID);
+        messages.push(this.getLongTermThreadRootMessage(lfgID));
+
+        await this.refreshMessages(users, messages, {
+            lfg,
+            thread
+        });
+    }
+
+    public async refreshRegularMessage(lfgID: number) {
+        const lfg = LfgManager.instance.getRegularLfg(lfgID);
+        const users = LfgUserManager.instance.getRegularUsers(lfgID);
+        const thread = LfgThreadManager.instance.getRegularThread(lfgID);
+        const messages = this.getRegularMessage(lfgID);
+        messages.push(this.getRegularThreadRootMessage(lfgID));
+
+        await this.refreshMessages(users, messages, {
+            lfg,
+            thread
+        });
     }
 
     public async createNormalMessage(option: LfgMessageCreateOption) {
@@ -301,7 +342,11 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         this.regularMessages = this.regularMessages.filter((msg) => msg.lfg.id != lfgID);
     }
 
-    private async refreshMessages(users: LfgUser[], messages: LfgMessage[]) {
+    private async refreshMessages(
+        users: LfgUser[],
+        messages: LfgMessage[],
+        options?: { lfg: Lfg, thread: LfgThread }
+    ) {
         const channelIDs = new Set<string>();
         messages.map((message) => channelIDs.add(message.channelID));
 
@@ -328,7 +373,8 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
                     try {
                         const realMessage = await thread.messages.fetch(message.messageID);
                         const embed = realMessage.embeds[0];
-                        const newEmbed = this.createUserRefreshedEmbed(embed, users);
+                        const newEmbed = !options ? this.createUserRefreshedEmbed(embed, users)
+                            : this.createUserRefreshedEmbed(embed, users, options);
                         await realMessage.edit({
                             embeds: [newEmbed]
                         });
@@ -344,7 +390,8 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
                 try {
                     const realMessage = await channel.messages.fetch(message.messageID);
                     const embed = realMessage.embeds[0];
-                    const newEmbed = this.createUserRefreshedEmbed(embed, users);
+                    const newEmbed = !options ? this.createUserRefreshedEmbed(embed, users)
+                        : this.createUserRefreshedEmbed(embed, users, options);
                     await realMessage.edit({
                         embeds: [newEmbed]
                     });
@@ -355,18 +402,41 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         }
     }
 
-    private createUserRefreshedEmbed(originEmbed: APIEmbed, users: LfgUser[]) {
+    private createUserRefreshedEmbed(originEmbed: APIEmbed, users: LfgUser[], option?: { lfg: Lfg, thread: LfgThread }) {
         const newEmbed = new EmbedBuilder();
-        const fields = this.findField(originEmbed.fields);
-        fields.join.value = this.createJoinString(users);
-        fields.alter.value = this.createAlterString(users);
+        const {
+            join,
+            alter,
+            locale
+        } = this.findField(originEmbed.fields);
+        join.value = this.createJoinString(users);
+        alter.value = this.createAlterString(users);
+
+        if (option) {
+            let typeStr;
+            if (option.lfg instanceof NormalLfg) {
+                typeStr = "NORMAL";
+            } else if (option.lfg instanceof LongTermLfg) {
+                typeStr = "LONG-TERM";
+            } else {
+                typeStr = "REGULAR";
+            }
+
+            return this.createMessageEmbed({
+                lfg: option.lfg,
+                locale,
+                users,
+                thread: option.thread,
+                type: typeStr as LfgType
+            });
+        }
         newEmbed.setTitle(originEmbed.title)
             .setDescription(originEmbed.description)
             .setURL(originEmbed.url)
             .setFooter(originEmbed.footer)
             .addFields([
-                fields.join,
-                fields.alter
+                join,
+                alter
             ]);
 
         return newEmbed;
@@ -379,9 +449,12 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         const alterStrings = getStrings("alter");
         let alterField;
 
+        let locale;
+
         fields.map((field) => {
             for (const joinString of joinStrings) {
                 if (field.name == joinString.value) {
+                    locale = joinString.locale;
                     joinField = field;
                 }
             }
@@ -394,6 +467,7 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         });
 
         return {
+            locale,
             join: joinField as { name: string, value: string, inline?: boolean },
             alter: alterField as { name: string, value: string, inline?: boolean }
         };

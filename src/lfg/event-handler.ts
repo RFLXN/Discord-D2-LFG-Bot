@@ -167,6 +167,21 @@ const deleteRegularLfgHandler = async (lfgID: number) => {
     LfgThreadManager.instance.deleteCachedRegularThread(lfgID);
 };
 
+const editNormalLfgHandler = async (lfg: NormalLfg) => {
+    await LfgMessageManager.instance.refreshNormalMessage(lfg.id);
+    await LfgThreadManager.instance.refreshNormalThread(lfg.id);
+};
+
+const editLongTermLfgHandler = async (lfg: LongTermLfg) => {
+    await LfgMessageManager.instance.refreshLongTermMessage(lfg.id);
+    await LfgThreadManager.instance.refreshLongTermThread(lfg.id);
+};
+
+const editRegularLfgHandler = async (lfg: RegularLfg) => {
+    await LfgMessageManager.instance.refreshRegularMessage(lfg.id);
+    await LfgThreadManager.instance.refreshRegularThread(lfg.id);
+};
+
 const applyEventHandlers = () => {
     LfgManager.instance.typedOn("NEW_NORMAL_LFG", newNormalLfgHandler);
     LfgManager.instance.typedOn("NEW_LONG_TERM_LFG", newLongTermLfgHandler);
@@ -174,6 +189,9 @@ const applyEventHandlers = () => {
     LfgManager.instance.typedOn("DELETE_NORMAL_LFG", deleteNormalLfgHandler);
     LfgManager.instance.typedOn("DELETE_LONG_TERM_LFG", deleteLongTermLfgHandler);
     LfgManager.instance.typedOn("DELETE_REGULAR_LFG", deleteRegularLfgHandler);
+    LfgManager.instance.typedOn("EDIT_NORMAL_LFG", editNormalLfgHandler);
+    LfgManager.instance.typedOn("EDIT_LONG_TERM_LFG", editLongTermLfgHandler);
+    LfgManager.instance.typedOn("EDIT_REGULAR_LFG", editRegularLfgHandler);
 };
 
 export default applyEventHandlers;
