@@ -1,5 +1,5 @@
 import {
-    Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation
+    Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Relation
 } from "typeorm";
 import { LongTermLfg, NormalLfg, RegularLfg } from "./lfg";
 
@@ -34,9 +34,9 @@ class LfgThread {
 
 @Entity({ name: "NORMAL_LFG_THREAD" })
 class NormalLfgThread extends LfgThread {
-    @ManyToOne(
+    @OneToOne(
         (type) => NormalLfg,
-        (lfg) => lfg.threads,
+        (lfg) => lfg.thread,
         { onDelete: "CASCADE" }
     )
     @JoinColumn({
@@ -48,9 +48,9 @@ class NormalLfgThread extends LfgThread {
 
 @Entity({ name: "LONG_TERM_LFG_THREAD" })
 class LongTermLfgThread extends LfgThread {
-    @ManyToOne(
+    @OneToOne(
         (type) => LongTermLfg,
-        (lfg) => lfg.threads,
+        (lfg) => lfg.thread,
         { onDelete: "CASCADE" }
     )
     @JoinColumn({
@@ -62,9 +62,9 @@ class LongTermLfgThread extends LfgThread {
 
 @Entity({ name: "REGULAR_LFG_THREAD" })
 class RegularLfgThread extends LfgThread {
-    @ManyToOne(
+    @OneToOne(
         (type) => RegularLfg,
-        (lfg) => lfg.threads,
+        (lfg) => lfg.thread,
         { onDelete: "CASCADE" }
     )
     @JoinColumn({

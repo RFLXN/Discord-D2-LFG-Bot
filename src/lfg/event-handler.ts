@@ -4,6 +4,7 @@ import { LfgUserManager } from "./lfg-user-manager";
 import { LfgManager } from "./lfg-manager";
 import LfgThreadManager from "./lfg-thread-manager";
 import { LfgMessageManager } from "./lfg-message-manager";
+import refreshLfgList from "./lfg-list";
 
 const newNormalLfgHandler = async (creator: LfgCreator, lfg: NormalLfg) => {
     console.log(`Normal LFG Created: ${lfg.id}`);
@@ -46,6 +47,8 @@ const newNormalLfgHandler = async (creator: LfgCreator, lfg: NormalLfg) => {
         type: "THREAD_ROOT",
         messageID: message.id
     });
+
+    await refreshLfgList(lfg.guildID, "NORMAL");
 };
 
 const newLongTermLfgHandler = async (creator: LfgCreator, lfg: LongTermLfg) => {
@@ -89,6 +92,8 @@ const newLongTermLfgHandler = async (creator: LfgCreator, lfg: LongTermLfg) => {
         type: "THREAD_ROOT",
         messageID: message.id
     });
+
+    await refreshLfgList(lfg.guildID, "LONG-TERM");
 };
 
 const newRegularLfgHandler = async (creator: LfgCreator, lfg: RegularLfg) => {
@@ -132,6 +137,8 @@ const newRegularLfgHandler = async (creator: LfgCreator, lfg: RegularLfg) => {
         type: "THREAD_ROOT",
         messageID: message.id
     });
+
+    await refreshLfgList(lfg.guildID, "REGULAR");
 };
 
 const deleteNormalLfgHandler = async (lfgID: number) => {
@@ -140,6 +147,7 @@ const deleteNormalLfgHandler = async (lfgID: number) => {
     try {
         const thread = await LfgThreadManager.instance.getRealNormalThread(lfgID);
         await thread.delete();
+        await refreshLfgList(thread.guild.id, "NORMAL");
     } catch (ignore) {
     }
     LfgThreadManager.instance.deleteCachedNormalThread(lfgID);
@@ -151,6 +159,7 @@ const deleteLongTermLfgHandler = async (lfgID: number) => {
     try {
         const thread = await LfgThreadManager.instance.getRealLongTermThread(lfgID);
         await thread.delete();
+        await refreshLfgList(thread.guild.id, "LONG-TERM");
     } catch (ignore) {
     }
     LfgThreadManager.instance.deleteCachedLongTermThread(lfgID);
@@ -162,6 +171,7 @@ const deleteRegularLfgHandler = async (lfgID: number) => {
     try {
         const thread = await LfgThreadManager.instance.getRealRegularThread(lfgID);
         await thread.delete();
+        await refreshLfgList(thread.guild.id, "REGULAR");
     } catch (ignore) {
     }
     LfgThreadManager.instance.deleteCachedRegularThread(lfgID);
@@ -170,16 +180,19 @@ const deleteRegularLfgHandler = async (lfgID: number) => {
 const editNormalLfgHandler = async (lfg: NormalLfg) => {
     await LfgMessageManager.instance.refreshNormalMessage(lfg.id);
     await LfgThreadManager.instance.refreshNormalThread(lfg.id);
+    await refreshLfgList(lfg.guildID, "NORMAL");
 };
 
 const editLongTermLfgHandler = async (lfg: LongTermLfg) => {
     await LfgMessageManager.instance.refreshLongTermMessage(lfg.id);
     await LfgThreadManager.instance.refreshLongTermThread(lfg.id);
+    await refreshLfgList(lfg.guildID, "LONG-TERM");
 };
 
 const editRegularLfgHandler = async (lfg: RegularLfg) => {
     await LfgMessageManager.instance.refreshRegularMessage(lfg.id);
     await LfgThreadManager.instance.refreshRegularThread(lfg.id);
+    await refreshLfgList(lfg.guildID, "REGULAR");
 };
 
 const applyEventHandlers = () => {

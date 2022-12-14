@@ -1,9 +1,14 @@
 import {
-    ButtonInteraction, ChatInputCommandInteraction, Client, Interaction
+    ButtonInteraction,
+    ChatInputCommandInteraction,
+    Client,
+    Interaction,
+    MessageContextMenuCommandInteraction
 } from "discord.js";
 import { registerCommands } from "./command-register";
 import sqliteInit from "./db/sqlite";
-import index from "./command";
+import commandIndex from "./command";
+import messageContextMenuIndex from "./context-menu";
 import { connectDB } from "./db/typeorm";
 import { loadStarters } from "./lfg/regular-lfg-starter";
 import { LfgManager } from "./lfg/lfg-manager";
@@ -36,7 +41,7 @@ const onReady = async (client: Client<true>) => {
 const onInteractionCreate = async (interaction: Interaction) => {
     if (interaction.isChatInputCommand()) {
         const i = interaction as ChatInputCommandInteraction;
-        const targetCmd = index.find((cmd) => cmd.data.name.toLowerCase() == i.commandName.toLowerCase());
+        const targetCmd = commandIndex.find((cmd) => cmd.data.name.toLowerCase() == i.commandName.toLowerCase());
         if (targetCmd) {
             try {
                 const start = new Date();
@@ -44,9 +49,29 @@ const onInteractionCreate = async (interaction: Interaction) => {
                 await targetCmd.exec(i);
                 const end = new Date();
                 console.log(`Command Executed in ${end.valueOf() - start.valueOf()} ms. `
-                    + `(Name: ${targetCmd.data.name} / ID: ${interaction.id})`);
+                    + `(Name: ${targetCmd.data.name} / ID: ${i.id})`);
             } catch (e) {
-                console.error(`Failed to Execute Command (Name: ${targetCmd.data.name} / ID: ${interaction.id})`);
+                console.error(`Failed to Execute Command (Name: ${targetCmd.data.name} / ID: ${i.id})`);
+                console.error(e);
+            }
+        }
+
+        return;
+    }
+
+    if (interaction.isMessageContextMenuCommand()) {
+        const i = interaction as MessageContextMenuCommandInteraction;
+        const targetMenu = messageContextMenuIndex
+            .find((menu) => menu.data.name.toLowerCase() == i.commandName.toLowerCase());
+        if (targetMenu) {
+            try {
+                const start = new Date();
+                await targetMenu.exec(i);
+                const end = new Date();
+                console.log(`Message Context Menu Executed in ${end.valueOf() - start.valueOf()} ms. `
+                    + `(Name: ${targetMenu.data.name} / ID: ${i.id})`);
+            } catch (e) {
+                console.error(`Failed to Execute Message Context Menu (Name: ${targetMenu.data.name} / ID: ${i.id})`);
                 console.error(e);
             }
         }

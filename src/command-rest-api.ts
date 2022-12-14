@@ -1,10 +1,11 @@
-import { REST, Routes, SlashCommandBuilder } from "discord.js";
+import { REST, Routes } from "discord.js";
+import CommandBuilder from "./type/CommandBuilder";
 
 const registerGuildCommands = async (
     rest: REST,
     clientId: string,
     guildId: string,
-    commands: SlashCommandBuilder[]
+    commands: CommandBuilder[]
 ) => rest.post(
     Routes.applicationGuildCommands(clientId, guildId),
     { body: commands }
@@ -13,7 +14,7 @@ const registerGuildCommands = async (
 const registerGlobalCommands = async (
     rest: REST,
     clientId: string,
-    commands: SlashCommandBuilder[]
+    commands: CommandBuilder[]
 ) => rest.post(
     Routes.applicationCommands(clientId),
     { body: commands }
@@ -23,7 +24,7 @@ const overrideGuildCommands = async (
     rest: REST,
     clientId: string,
     guildId: string,
-    commands: SlashCommandBuilder[]
+    commands: CommandBuilder[]
 ) => rest.put(
     Routes.applicationGuildCommands(clientId, guildId),
     { body: commands }
@@ -32,7 +33,7 @@ const overrideGuildCommands = async (
 const overrideGlobalCommands = async (
     rest: REST,
     clientId: string,
-    commands: SlashCommandBuilder[]
+    commands: CommandBuilder[]
 ) => rest.put(
     Routes.applicationCommands(clientId),
     { body: commands }

@@ -37,7 +37,9 @@ interface LfgLocaleMapElements {
     lfgDeleted: string,
     failedToDeleteLfg: string,
     lfgEditCompletionMessage: string,
-    lfgEditFailedMessage: string
+    lfgEditFailedMessage: string,
+    invalidLfgMessage: string,
+    needPermissionToStartLfg: string
 }
 
 type BaseLfgLocaleMap = Partial<Record<LocaleString, LfgLocaleMapElements>>;

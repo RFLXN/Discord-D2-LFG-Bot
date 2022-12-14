@@ -3,15 +3,45 @@ import { LfgManager } from "./lfg-manager";
 import { getLfgServerConfig } from "./server-config";
 import client from "../main";
 import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
+import { getLocalizedString } from "./locale-map";
+import LfgThreadManager from "./lfg-thread-manager";
 
 type LFG = NormalLfg | LongTermLfg | RegularLfg;
 
 const createListEmbed = (type: "NORMAL" | "LONG-TERM" | "REGULAR", list: LFG[]): EmbedBuilder => {
-    const embed = new EmbedBuilder();
+    const builder = new EmbedBuilder();
+    let field = "";
 
-    // TODO: IMPLEMENT CREATE LFG LIST EMBED
+    if (type == "NORMAL") {
+        builder.setTitle(getLocalizedString("default", "normalLfg"));
+        list.map((lfg) => {
+            const thread = LfgThreadManager.instance.getNormalThread(lfg.id);
+            const url = `https://discord.com/channels/${lfg.guildID}/${thread.threadID}`;
+            field += `[${lfg.id} - ${lfg.activityName}](${url})\n`;
+        });
+    } else if (type == "LONG-TERM") {
+        builder.setTitle(getLocalizedString("default", "longTermLfg"));
+        list.map((lfg) => {
+            const thread = LfgThreadManager.instance.getLongTermThread(lfg.id);
+            const url = `https://discord.com/channels/${lfg.guildID}/${thread.threadID}`;
+            field += `[${lfg.id} - ${lfg.activityName}](${url})\n`;
+        });
+    } else {
+        builder.setTitle(getLocalizedString("default", "regularLfg"));
+        list.map((lfg) => {
+            const thread = LfgThreadManager.instance.getRegularThread(lfg.id);
+            const url = `https://discord.com/channels/${lfg.guildID}/${thread.threadID}`;
+            field += `[${lfg.id} - ${lfg.activityName}](${url})\n`;
+        });
+    }
 
-    return embed;
+    if (field == "") {
+        field = "None";
+    }
+
+    builder.setDescription(field);
+
+    return builder;
 };
 
 const refreshLfgList = async (guildID: string, type: "NORMAL" | "LONG-TERM" | "REGULAR") => {
@@ -60,5 +90,4 @@ const refreshLfgList = async (guildID: string, type: "NORMAL" | "LONG-TERM" | "R
     });
 };
 
-// TODO: ADD THIS TO EVENT HANDLERS (WHEN EDIT AND CREATED)
 export default refreshLfgList;

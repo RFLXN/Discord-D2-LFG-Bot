@@ -53,7 +53,7 @@ class NormalLfg extends DateLfg {
         users: NormalLfgUser[];
 
     @OneToMany((type) => NormalLfgThread, (thread) => thread.lfg)
-        threads: NormalLfgThread[];
+        thread: NormalLfgThread;
 
     @OneToMany((type) => NormalLfgMessage, (message) => message.lfg)
         messages: NormalLfgMessage[];
@@ -65,7 +65,7 @@ class LongTermLfg extends DateLfg {
         users: LongTermLfgUser[];
 
     @OneToMany((type) => LongTermLfgThread, (thread) => thread.lfg)
-        threads: LongTermLfgThread[];
+        thread: LongTermLfgThread;
 
     @OneToMany((type) => LongTermLfgMessage, (message) => message.lfg)
         messages: LongTermLfgMessage[];
@@ -77,7 +77,7 @@ class RegularLfg extends BaseLfg {
         users: RegularLfgUser[];
 
     @OneToMany((type) => RegularLfgThread, (thread) => thread.lfg)
-        threads: RegularLfgThread[];
+        thread: RegularLfgThread;
 
     @OneToMany((type) => RegularLfgMessage, (message) => message.lfg)
         messages: RegularLfgMessage[];
