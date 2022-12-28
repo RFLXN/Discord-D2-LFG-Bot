@@ -2,8 +2,8 @@ module.exports = {
     apps: [
         {
             name: "DiscordD2LfgBot",
-            script: "./dist/main.js",
-            node_args: "--experimental-specifier-resolution=node",
+            script: "run start",
+            interpreter: "/usr/bin/bash",
             cwd: "/home/ubuntu/Discord-D2-LFG-Bot/",
             log_date_format: "YYYY-MM-DD HH:mm Z",
             error_file: "/home/ubuntu/Discord-D2-LFG-Bot/logs/error.log",
