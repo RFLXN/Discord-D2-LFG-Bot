@@ -16,6 +16,7 @@ import {
 import { doServerAdmin, serverAdmin } from "./server-admin";
 import { botAdmin, doBotAdmin } from "./bot-admin";
 import CommandIndex from "../type/CommandIndex";
+import { doGitHub, github } from "./github";
 
 const convertOptionDataToBuilder = (option: ApplicationCommandOptionData) => {
     if (option.type == ApplicationCommandOptionType.Subcommand) {
@@ -160,6 +161,10 @@ const index: CommandIndex[] = [
     {
         data: convertCommandDataToBuilder(botAdmin),
         exec: doBotAdmin
+    },
+    {
+        data: convertCommandDataToBuilder(github),
+        exec: doGitHub
     }
 ];
 

@@ -1,4 +1,3 @@
-// NzU1OTQ5NTkwODE3Mjc1OTI3.GMLv6S.sDNEwN9j4BZ7_oVAV5nhtPUOybBXw2SuLtxP8g
 import {
     Client, Events, IntentsBitField, REST
 } from "discord.js";
