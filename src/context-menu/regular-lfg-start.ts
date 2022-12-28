@@ -1,6 +1,6 @@
 import { ApplicationCommandType, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction } from "discord.js";
 import { getLocale } from "../command/lfg/share";
-import { getLocalizedString } from "../lfg/locale-map";
+import { getLocalizedString, getStrings } from "../lfg/locale-map";
 import { LfgManager } from "../lfg/lfg-manager";
 import { isStarter } from "../lfg/regular-lfg-starter";
 import { LfgUserManager } from "../lfg/lfg-user-manager";
@@ -36,10 +36,23 @@ const doRegularLfgStart = async (interaction: MessageContextMenuCommandInteracti
         });
     }
 
-    const split = embed.title.replaceAll(" ", "")
-        .split(":");
+    const split = embed.title.split(":");
+
     try {
-        const lfgID = Number(split[split.length - 1]);
+        if (split.length < 2) {
+            throw new Error();
+        }
+
+        const regularLfgStrings = getStrings("regularLfg")
+            .map((raw) => raw.value);
+
+        const has = regularLfgStrings.find((s) => split[0].includes(s));
+
+        if (!has) {
+            throw new Error();
+        }
+
+        const lfgID = Number(split[split.length - 1].replaceAll(" ", ""));
         if (Number.isNaN(lfgID)) {
             throw new Error();
         }
@@ -56,7 +69,19 @@ const doRegularLfgStart = async (interaction: MessageContextMenuCommandInteracti
             });
         }
 
-        const result = await startRegularLfg(lfgID);
+        const result = await startRegularLfg(lfgID, locale);
+
+        if (result) {
+            interaction.reply({
+                ephemeral: true,
+                content: `${getLocalizedString(locale, "startRegularLfg")} (LFG ID: ${lfgID})`
+            });
+        } else {
+            interaction.reply({
+                ephemeral: true,
+                content: getLocalizedString(locale, "invalidLfgMessage")
+            });
+        }
     } catch (ignore) {
         return interaction.reply({
             ephemeral: true,

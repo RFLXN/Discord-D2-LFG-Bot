@@ -38,7 +38,9 @@
     "lfgEditCompletionMessage": "Looking-For-Group Edited.",
     "lfgEditFailedMessage": "Failed to Edit Looking-For-Group.",
     "invalidLfgMessage": "Invalid LFG Message. Please Select Correct LFG Message.",
-    "needPermissionToStartLfg": "Regular LFG Can Start Only Creator or Server Administrator."
+    "needPermissionToStartLfg": "Regular LFG Can Start Only Creator or Server Administrator.",
+    "startRegularLfg": "Regular Looking-For-Group will be Started Soon.",
+    "startedRegularLfgDecidedUsers": "Decided Users"
   },
   "ko": {
     "activityCreateSelectionTitle": "파티모집 생성",
@@ -79,7 +81,9 @@
     "lfgEditCompletionMessage": "파티모집이 수정되었습니다.",
     "lfgEditFailedMessage": "파티모집 수정에 실패했습니다.",
     "invalidLfgMessage": "잘못된 파티모집 메시지입니다. 올바른 파티모집 메시지를 선택해 주세요.",
-    "needPermissionToStartLfg": "정규 파티모집은 파티모집 생성자나 서버 어드민만 가능합니다."
+    "needPermissionToStartLfg": "정규 파티모집은 파티모집 생성자나 서버 어드민만 가능합니다.",
+    "startRegularLfg": "정규 파티모집이 곧 출발할 예정입니다.",
+    "startedRegularLfgDecidedUsers": "참가 확정 유저"
   },
   "ja": {
     "activityCreateSelectionTitle": "パーティ募集作成",
@@ -120,6 +124,8 @@
     "lfgEditCompletionMessage": "パーティ募集が修正されました。",
     "lfgEditFailedMessage": "パーティ募集の修正に失敗しました。",
     "invalidLfgMessage": "間違ったパーティ募集メッセージです。正しいパーティ募集メッセージを選んでください。",
-    "needPermissionToStartLfg": "定期パーティ募集の開始はこのパーティ募集の作成者またはサーバー管理者しかできません。"
+    "needPermissionToStartLfg": "定期パーティ募集の開始はこのパーティ募集の作成者またはサーバー管理者しかできません。",
+    "startRegularLfg": "定期パーティ募集がすばらく開始さらます。",
+    "startedRegularLfgDecidedUsers": "参加が確定されたユーザー"
   }
 }

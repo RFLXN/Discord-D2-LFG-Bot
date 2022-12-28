@@ -21,6 +21,9 @@ import { loadLfgServerConfigs } from "./lfg/server-config";
 import LfgThreadManager from "./lfg/lfg-thread-manager";
 import { LfgMessageManager } from "./lfg/lfg-message-manager";
 import { handleButton } from "./lfg/handle-button";
+import collectExpiredLfg from "./lfg/expired-lfg-collector";
+import { alertStartSoon, clearAlertedList } from "./lfg/start-soon-alert";
+import preventThreadArchive from "./lfg/prevent-thread-archive";
 
 const onReady = async (client: Client<true>) => {
     console.log(`Bot Logged in Discord. (Tag: ${client.user.tag} / ID: ${client.user.id})`);
@@ -36,6 +39,18 @@ const onReady = async (client: Client<true>) => {
     await loadLfgLocaleMap();
     await loadLfgServerConfigs();
     applyEventHandlers();
+
+    // Collect Expired LFG Every 5 Minutes
+    setInterval(collectExpiredLfg, 1000 * 60 * 10);
+
+    // Check Start Soon LFG Every Minute
+    setInterval(alertStartSoon, 1000 * 60);
+
+    // Clear Altered List Every Hour
+    setInterval(clearAlertedList, 1000 * 60 * 60);
+
+    // Send Message for Prevent Thread Archiving Every Day
+    setInterval(preventThreadArchive, 1000 * 60 * 60 * 24);
 };
 
 const onInteractionCreate = async (interaction: Interaction) => {
