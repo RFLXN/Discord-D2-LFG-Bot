@@ -1,6 +1,7 @@
 import {
     ButtonInteraction,
     ChatInputCommandInteraction,
+    GuildMember,
     ModalSubmitInteraction,
     SelectMenuInteraction,
     ThreadChannel
@@ -80,7 +81,7 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
     const createdLfg = await LfgManager.instance.createNormalLfg({
         guildID: interaction.guild.id,
         userID: interaction.user.id,
-        userName: interaction.user.username,
+        userName: (interaction.member as GuildMember).displayName,
         userTag: interaction.user.tag
     }, {
         activityName: activityAwaited.values[0],

@@ -82,5 +82,12 @@
       "ko": "레이드 - 왕의 몰락",
       "ja": "レイド - 邪神、滅びる"
     }
+  },
+  {
+    "name": "Others (Type in Description)",
+    "localizationName": {
+      "ko": "기타 (설명에 써주세요)",
+      "ja": "その他（説明に書いてください）"
+    }
   }
 ]

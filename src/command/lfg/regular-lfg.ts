@@ -1,4 +1,6 @@
-import { ButtonInteraction, ChatInputCommandInteraction, ThreadChannel } from "discord.js";
+import {
+    ButtonInteraction, ChatInputCommandInteraction, GuildMember, ThreadChannel
+} from "discord.js";
 import { ComponentType } from "discord-api-types/v10";
 import { LfgSubCommandExecutor, LfgSubCommandExecutors, LfgSubCommandIdExecutor } from "../lfg";
 import {
@@ -56,7 +58,7 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
     const createdLfg = await LfgManager.instance.createRegularLfg({
         guildID: interaction.guild.id,
         userID: interaction.user.id,
-        userName: interaction.user.username,
+        userName: (interaction.member as GuildMember).displayName,
         userTag: interaction.user.tag
     }, {
         activityName: activityAwaited.values[0],
