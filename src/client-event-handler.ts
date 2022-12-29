@@ -41,16 +41,40 @@ const onReady = async (client: Client<true>) => {
     applyEventHandlers();
 
     // Collect Expired LFG Every 5 Minutes
-    setInterval(collectExpiredLfg, 1000 * 60 * 10);
+    setInterval(() => {
+        try {
+            collectExpiredLfg();
+        } catch (e) {
+            console.error(e);
+        }
+    }, 1000 * 60 * 10);
 
     // Check Start Soon LFG Every Minute
-    setInterval(alertStartSoon, 1000 * 60);
+    setInterval(() => {
+        try {
+            alertStartSoon();
+        } catch (e) {
+            console.error(e);
+        }
+    }, 1000 * 60);
 
     // Clear Altered List Every Hour
-    setInterval(clearAlertedList, 1000 * 60 * 60);
+    setInterval(() => {
+        try {
+            clearAlertedList();
+        } catch (e) {
+            console.error(e);
+        }
+    }, 1000 * 60 * 60);
 
     // Send Message for Prevent Thread Archiving Every Day
-    setInterval(preventThreadArchive, 1000 * 60 * 60 * 24);
+    setInterval(() => {
+        try {
+            preventThreadArchive();
+        } catch (e) {
+            console.error(e);
+        }
+    }, 1000 * 60 * 60 * 24);
 };
 
 const onInteractionCreate = async (interaction: Interaction) => {

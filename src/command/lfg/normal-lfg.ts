@@ -63,8 +63,21 @@ const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInte
         date = new Date();
     } else {
         try {
-            date = moment(lfgDateString, "YYYY-MM-DD HH:mm")
-                .toDate();
+            if (lfgDateString.length <= 5) {
+                const raw = moment(lfgDateString, "HH:mm");
+                if (!raw.isValid()) throw new Error();
+
+                const now = new Date();
+                date = raw.toDate();
+
+                if (now.valueOf() > date.valueOf()) {
+                    date = new Date(date.valueOf() + (1000 * 60 * 60 * 24));
+                }
+            } else {
+                const raw = moment(lfgDateString, "YYYY-MM-DD HH:mm");
+                if (!raw.isValid()) throw new Error();
+                date = raw.toDate();
+            }
         } catch (e) {
             await modalAwaited.reply({
                 content: `Error: '${lfgDateString.replaceAll("\n", "")}' is Invalid Format.`
