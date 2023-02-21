@@ -2,7 +2,6 @@ import { AutocompleteInteraction } from "discord.js";
 import { LfgManager } from "../lfg/lfg-manager";
 
 const doLfgAutoComplete = async (interaction: AutocompleteInteraction) => {
-    console.log("hadle");
     await interaction.respond(LfgManager.instance.getAllNormalLfg()
         .map((lfg) => ({
             name: `${lfg.id} - ${lfg.activityName}`,
