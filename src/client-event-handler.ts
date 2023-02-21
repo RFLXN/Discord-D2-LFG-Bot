@@ -1,4 +1,5 @@
 import {
+    AutocompleteInteraction,
     ButtonInteraction,
     ChatInputCommandInteraction,
     Client,
@@ -24,6 +25,7 @@ import { handleButton } from "./lfg/handle-button";
 import collectExpiredLfg from "./lfg/expired-lfg-collector";
 import { alertStartSoon, clearAlertedList } from "./lfg/start-soon-alert";
 import preventThreadArchive from "./lfg/prevent-thread-archive";
+import { doLfgAutoComplete, doLongTermLfgAutoComplete, doRegularLfgAutoComplete } from "./auto-complete/lfg";
 
 const onReady = async (client: Client<true>) => {
     console.log(`Bot Logged in Discord. (Tag: ${client.user.tag} / ID: ${client.user.id})`);
@@ -133,6 +135,18 @@ const onInteractionCreate = async (interaction: Interaction) => {
                 console.error(`Failed to Execute Button Interaction (${interaction.customId} / ${interaction.id})`);
                 console.error(e);
             }
+        }
+    }
+
+    if (interaction.isAutocomplete()) {
+        const i = interaction as AutocompleteInteraction;
+
+        if (i.commandName == "lfg" && i.options.getSubcommand() != "create") {
+            await doLfgAutoComplete(i);
+        } else if (i.commandName == "regular-lfg" && i.options.getSubcommand() != "create") {
+            await doRegularLfgAutoComplete(i);
+        } else if (i.commandName == "long-term-lfg" && i.options.getSubcommand() != "create") {
+            await doLongTermLfgAutoComplete(i);
         }
     }
 };

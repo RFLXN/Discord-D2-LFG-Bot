@@ -53,7 +53,8 @@ const normalLfg: ChatInputApplicationCommandData = {
                         ja: "パーティ募集 ID"
                     },
                     type: ApplicationCommandOptionType.Integer,
-                    required: true
+                    required: true,
+                    autocomplete: true
                 }
             ]
         },
@@ -78,7 +79,8 @@ const normalLfg: ChatInputApplicationCommandData = {
                         ja: "パーティ募集 ID"
                     },
                     type: ApplicationCommandOptionType.Integer,
-                    required: true
+                    required: true,
+                    autocomplete: true
                 }
             ]
         },
@@ -103,7 +105,8 @@ const normalLfg: ChatInputApplicationCommandData = {
                         ja: "パーティ募集 ID"
                     },
                     type: ApplicationCommandOptionType.Integer,
-                    required: true
+                    required: true,
+                    autocomplete: true
                 }
             ]
         }
@@ -156,7 +159,8 @@ const longTermLfg: ChatInputApplicationCommandData = {
                         ja: "長期パーティ募集 ID"
                     },
                     type: ApplicationCommandOptionType.Integer,
-                    required: true
+                    required: true,
+                    autocomplete: true
                 }
             ]
         },
@@ -181,7 +185,8 @@ const longTermLfg: ChatInputApplicationCommandData = {
                         ja: "長期パーティ募集 ID"
                     },
                     type: ApplicationCommandOptionType.Integer,
-                    required: true
+                    required: true,
+                    autocomplete: true
                 }
             ]
         },
@@ -206,7 +211,8 @@ const longTermLfg: ChatInputApplicationCommandData = {
                         ja: "長期パーティ募集 ID"
                     },
                     type: ApplicationCommandOptionType.Integer,
-                    required: true
+                    required: true,
+                    autocomplete: true
                 }
             ]
         }
@@ -259,7 +265,8 @@ const regularLfg: ChatInputApplicationCommandData = {
                         ja: "定期パーティ募集 ID"
                     },
                     type: ApplicationCommandOptionType.Integer,
-                    required: true
+                    required: true,
+                    autocomplete: true
                 }
             ]
         },
@@ -284,7 +291,8 @@ const regularLfg: ChatInputApplicationCommandData = {
                         ja: "定期パーティ募集 ID"
                     },
                     type: ApplicationCommandOptionType.Integer,
-                    required: true
+                    required: true,
+                    autocomplete: true
                 }
             ]
         },
@@ -309,7 +317,8 @@ const regularLfg: ChatInputApplicationCommandData = {
                         ja: "定期パーティ募集 ID"
                     },
                     type: ApplicationCommandOptionType.Integer,
-                    required: true
+                    required: true,
+                    autocomplete: true
                 }
             ]
         }
