@@ -84,6 +84,13 @@
     }
   },
   {
+    "name": "Raid - Root of Nightmares",
+    "localizationName": {
+      "ko": "악몽의 뿌리",
+      "ja": "レイド - ナイトメアの根源"
+    }
+  },
+  {
     "name": "Others (Type in Description)",
     "localizationName": {
       "ko": "기타 (설명에 써주세요)",
