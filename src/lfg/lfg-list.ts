@@ -15,23 +15,28 @@ const createListEmbed = (type: "NORMAL" | "LONG-TERM" | "REGULAR", list: LFG[]):
     if (type == "NORMAL") {
         builder.setTitle(getLocalizedString("default", "normalLfg"));
         list.map((lfg) => {
+            const timestamp = `${Math.floor((lfg as NormalLfg).timestamp / 1000)}`;
             const thread = LfgThreadManager.instance.getNormalThread(lfg.id);
             const url = `https://discord.com/channels/${lfg.guildID}/${thread.threadID}`;
-            field += `[${lfg.id} (${lfg.activityName}) - ${lfg.description}](${url})\n`;
+            field += `[${lfg.id} [${lfg.activityName}]](${url}) <t:${timestamp}:F> (<t:${timestamp}:R>)\n`;
+            field += `${lfg.description}\n\n`;
         });
     } else if (type == "LONG-TERM") {
         builder.setTitle(getLocalizedString("default", "longTermLfg"));
         list.map((lfg) => {
+            const timestamp = `${Math.floor((lfg as LongTermLfg).timestamp / 1000)}`;
             const thread = LfgThreadManager.instance.getLongTermThread(lfg.id);
             const url = `https://discord.com/channels/${lfg.guildID}/${thread.threadID}`;
-            field += `[${lfg.id} (${lfg.activityName}) - ${lfg.description}](${url})\n`;
+            field += `[${lfg.id} [${lfg.activityName}]](${url}) <t:${timestamp}:F> (<t:${timestamp}:R>)\n`;
+            field += `${lfg.description}\n\n`;
         });
     } else {
         builder.setTitle(getLocalizedString("default", "regularLfg"));
         list.map((lfg) => {
             const thread = LfgThreadManager.instance.getRegularThread(lfg.id);
             const url = `https://discord.com/channels/${lfg.guildID}/${thread.threadID}`;
-            field += `[${lfg.id} (${lfg.activityName}) - ${lfg.description}](${url})\n`;
+            field += `[${lfg.id} [${lfg.activityName}]](${url})\n`;
+            field += `${lfg.description}\n\n`;
         });
     }
 

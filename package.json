@@ -5,8 +5,8 @@
   "type": "module",
   "license": "MIT",
   "dependencies": {
-    "discord-api-types": "^0.37.7",
-    "discord.js": "^14.6.0",
+    "discord-api-types": "^0.37.42",
+    "discord.js": "^14.11.0",
     "jsonschema": "^1.4.1",
     "moment": "^2.29.4",
     "sqlite3": "^5.1.2",
