@@ -1,16 +1,9 @@
 [
   {
-    "name": "Strike",
+    "name": "Strike/Nightfall",
     "localizationName": {
-      "ko": "공격전",
-      "ja": "ストライク"
-    }
-  },
-  {
-    "name": "Nightfall",
-    "localizationName": {
-      "ko": "황혼전",
-      "ja": "ナイトフォール"
+      "ko": "공격전/황혼전",
+      "ja": "ストライク・ナイトフォール"
     }
   },
   {
@@ -88,6 +81,55 @@
     "localizationName": {
       "ko": "레이드 - 악몽의 뿌리",
       "ja": "レイド - ナイトメアの根源"
+    }
+  },
+  {
+    "name": "Dungeon - Shattered Throne",
+    "localizationName": {
+      "ko": "던전 - 조각난 왕관",
+      "ja": "ダンジョン - 砕かれた玉座"
+    }
+  },
+  {
+    "name": "Dungeon - Pit of Heresy",
+    "localizationName": {
+      "ko": "던전 - 이단의 구덩이",
+      "ja": "ダンジョン - 異端の奈落"
+    }
+  },
+  {
+    "name": "Dungeon - Prophecy",
+    "localizationName": {
+      "ko": "던전 - 예언",
+      "ja": "ダンジョン - 予言"
+    }
+  },
+  {
+    "name": "Dungeon - Grasp of Avarice",
+    "localizationName": {
+      "ko": "던전 - 탐욕의 손아귀",
+      "ja": "ダンジョン - 強欲の支配"
+    }
+  },
+  {
+    "name": "Dungeon - Duality",
+    "localizationName": {
+      "ko": "던전 - 이중성",
+      "ja": "ダンジョン - デュアリティ"
+    }
+  },
+  {
+    "name": "Dungeon - Spire of the Watcher",
+    "localizationName": {
+      "ko": "던전 - 감시자의 첨탑",
+      "ja": "ダンジョン - 監視者のスパイア"
+    }
+  },
+  {
+    "name": "Dungeon - Ghosts of the Deep",
+    "localizationName": {
+      "ko": "던전 - 심해의 유령",
+      "ja": "ダンジョン - 深淵の亡霊"
     }
   },
   {
