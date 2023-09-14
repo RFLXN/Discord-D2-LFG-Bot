@@ -156,7 +156,6 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
     }
 
     public async refreshNormalMessageUser(lfgID: number) {
-        console.log(lfgID);
         const users = LfgUserManager.instance.getNormalUsers(lfgID);
         const messages = this.getNormalMessage(lfgID);
         messages.push(this.getNormalThreadRootMessage(lfgID));
@@ -350,6 +349,7 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         messages: LfgMessage[],
         options?: { lfg: Lfg, thread: LfgThread }
     ) {
+        console.log(`Refresh Messages: ${messages}`);
         const channelIDs = new Set<string>();
         messages.map((message) => channelIDs.add(message.channelID));
 
@@ -359,6 +359,7 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         for (const channelID of channelIDs) {
             const channelMessages = messages.filter((message) => message.channelID == channelID);
             const channel = (await guild.channels.fetch(channelID)) as TextChannel;
+            console.log(`Channel fetched: ${channel.name} (${channel.id})`);
 
             const threadIDs = new Set<string>();
             channelMessages.map((message) => {
@@ -378,9 +379,10 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
                         const embed = realMessage.embeds[0];
                         const newEmbed = !options ? this.createUserRefreshedEmbed(embed, users)
                             : this.createUserRefreshedEmbed(embed, users, options);
-                        await realMessage.edit({
+                        const edited = await realMessage.edit({
                             embeds: [newEmbed]
                         });
+                        console.log(edited);
                     } catch (e) {
                         console.error(e);
                     }
@@ -395,9 +397,10 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
                     const embed = realMessage.embeds[0];
                     const newEmbed = !options ? this.createUserRefreshedEmbed(embed, users)
                         : this.createUserRefreshedEmbed(embed, users, options);
-                    await realMessage.edit({
+                    const edited = await realMessage.edit({
                         embeds: [newEmbed]
                     });
+                    console.log(edited);
                 } catch (e) {
                     console.error(e);
                 }
