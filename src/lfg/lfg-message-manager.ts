@@ -106,12 +106,14 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
             .setURL(`https://discord.com/channels/${option.thread.guildID}/${option.thread.threadID}`)
             .addFields([
                 {
-                    name: getLocalizedString(localeMapKey, "join"),
+                    name: `${getLocalizedString(localeMapKey, "join")}`
+                        + `[${option.users.filter((u) => u.state == "JOIN").length}]`,
                     value: this.createJoinString(option.users),
                     inline: false
                 },
                 {
-                    name: getLocalizedString(localeMapKey, "alter"),
+                    name: `${getLocalizedString(localeMapKey, "alter")}`
+                        + `[${option.users.filter((u) => u.state == "JOIN").length}]`,
                     value: this.createAlterString(option.users),
                     inline: false
                 }
@@ -410,7 +412,9 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
             locale
         } = this.findField(originEmbed.fields);
         join.value = this.createJoinString(users);
+        join.name = join.name.replace(/\[[0-9]+]/, `[${users.filter((u) => u.state == "JOIN").length}]`);
         alter.value = this.createAlterString(users);
+        alter.name = alter.name.replace(/\[[0-9]+]/, `[${users.filter((u) => u.state == "ALTER").length}]`);
 
         if (option) {
             let typeStr;
