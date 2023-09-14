@@ -106,14 +106,12 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
             .setURL(`https://discord.com/channels/${option.thread.guildID}/${option.thread.threadID}`)
             .addFields([
                 {
-                    name: `${getLocalizedString(localeMapKey, "join")}`
-                        + `[${option.users.filter((u) => u.state == "JOIN").length}]`,
+                    name: `${getLocalizedString(localeMapKey, "join")}`,
                     value: this.createJoinString(option.users),
                     inline: false
                 },
                 {
-                    name: `${getLocalizedString(localeMapKey, "alter")}`
-                        + `[${option.users.filter((u) => u.state == "ALTER").length}]`,
+                    name: `${getLocalizedString(localeMapKey, "alter")}`,
                     value: this.createAlterString(option.users),
                     inline: false
                 }
@@ -349,7 +347,6 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         messages: LfgMessage[],
         options?: { lfg: Lfg, thread: LfgThread }
     ) {
-        console.log(`Refresh Messages: ${messages}`);
         const channelIDs = new Set<string>();
         messages.map((message) => channelIDs.add(message.channelID));
 
@@ -359,7 +356,6 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         for (const channelID of channelIDs) {
             const channelMessages = messages.filter((message) => message.channelID == channelID);
             const channel = (await guild.channels.fetch(channelID)) as TextChannel;
-            console.log(`Channel fetched: ${channel.name} (${channel.id})`);
 
             const threadIDs = new Set<string>();
             channelMessages.map((message) => {
@@ -382,7 +378,6 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
                         const edited = await realMessage.edit({
                             embeds: [newEmbed]
                         });
-                        console.log(edited);
                     } catch (e) {
                         console.error(e);
                     }
@@ -400,7 +395,6 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
                     const edited = await realMessage.edit({
                         embeds: [newEmbed]
                     });
-                    console.log(edited);
                 } catch (e) {
                     console.error(e);
                 }
@@ -416,9 +410,7 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
             locale
         } = this.findField(originEmbed.fields);
         join.value = this.createJoinString(users);
-        join.name = join.name.replace(/\[[0-9]+]/, `[${users.filter((u) => u.state == "JOIN").length}]`);
         alter.value = this.createAlterString(users);
-        alter.name = alter.name.replace(/\[[0-9]+]/, `[${users.filter((u) => u.state == "ALTER").length}]`);
 
         if (option) {
             let typeStr;
