@@ -113,7 +113,7 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
                 },
                 {
                     name: `${getLocalizedString(localeMapKey, "alter")}`
-                        + `[${option.users.filter((u) => u.state == "JOIN").length}]`,
+                        + `[${option.users.filter((u) => u.state == "ALTER").length}]`,
                     value: this.createAlterString(option.users),
                     inline: false
                 }
