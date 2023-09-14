@@ -154,7 +154,6 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
     }
 
     public async refreshNormalMessageUser(lfgID: number) {
-        console.log(lfgID);
         const users = LfgUserManager.instance.getNormalUsers(lfgID);
         const messages = this.getNormalMessage(lfgID);
         messages.push(this.getNormalThreadRootMessage(lfgID));
