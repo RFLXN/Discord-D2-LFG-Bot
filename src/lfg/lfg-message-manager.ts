@@ -477,8 +477,8 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         let str = "";
         users.filter((user) => user.state == "JOIN")
             .sort((a, b) => a.timestamp - b.timestamp)
-            .map((user) => {
-                str += `${user.userName} (${user.userTag})\n`;
+            .map((user, index) => {
+                str += `${index + 1}. ${user.userName} (${user.userTag})\n`;
             });
         if (str == "") {
             str = "None";
@@ -490,8 +490,8 @@ class LfgMessageManager extends TypedEventEmitter<LfgMessageEvents> {
         let str = "";
         users.filter((user) => user.state == "ALTER")
             .sort((a, b) => a.timestamp - b.timestamp)
-            .map((user) => {
-                str += `${user.userName} (${user.userTag})\n`;
+            .map((user, index) => {
+                str += `${index + 1}. ${user.userName} (${user.userTag})\n`;
             });
         if (str == "") {
             str = "None";
