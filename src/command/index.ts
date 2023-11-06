@@ -12,11 +12,11 @@ import {
 } from "discord.js";
 import {
     doLongTermLfg, doNormalLfg, doRegularLfg, longTermLfg, normalLfg, regularLfg
-} from "./lfg";
-import { doServerAdmin, serverAdmin } from "./server-admin";
-import { botAdmin, doBotAdmin } from "./bot-admin";
-import CommandIndex from "../type/CommandIndex";
-import { doGitHub, github } from "./github";
+} from "./lfg.js";
+import { doServerAdmin, serverAdmin } from "./server-admin.js";
+import { botAdmin, doBotAdmin } from "./bot-admin.js";
+import CommandIndex from "../type/CommandIndex.js";
+import { doGitHub, github } from "./github.js";
 
 const convertOptionDataToBuilder = (option: ApplicationCommandOptionData) => {
     if (option.type == ApplicationCommandOptionType.Subcommand) {

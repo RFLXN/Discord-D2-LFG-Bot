@@ -1,7 +1,8 @@
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import { promises as fs } from "fs";
-import loadJson from "./util/loadJson";
+import loadJson from "./util/loadJson.js";
+import { BotInfo } from "./type/BotInfo.js";
 
 const DIR_NAME = dirname(fileURLToPath(import.meta.url));
 const INFO_FILE_PATH = resolve(DIR_NAME, "../resource/bot-info.json");

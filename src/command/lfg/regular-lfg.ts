@@ -2,7 +2,7 @@ import {
     ButtonInteraction, ChatInputCommandInteraction, GuildMember, ThreadChannel
 } from "discord.js";
 import { ComponentType } from "discord-api-types/v10";
-import { LfgSubCommandExecutor, LfgSubCommandExecutors, LfgSubCommandIdExecutor } from "../lfg";
+import { LfgSubCommandExecutor, LfgSubCommandExecutors, LfgSubCommandIdExecutor } from "../lfg.js";
 import {
     createActivitySelectActionRow,
     createActivitySelectEmbed,
@@ -10,13 +10,13 @@ import {
     createDescriptionInputEmbed,
     getLocale,
     hasDeletePermission
-} from "./share";
-import { getLocalizedString } from "../../lfg/locale-map";
-import { LfgManager } from "../../lfg/lfg-manager";
-import { RegularLfgThread } from "../../db/entity/lfg-thread";
-import { LfgUserManager } from "../../lfg/lfg-user-manager";
-import { LfgMessageManager } from "../../lfg/lfg-message-manager";
-import LfgThreadManager from "../../lfg/lfg-thread-manager";
+} from "./share.js";
+import { getLocalizedString } from "../../lfg/locale-map.js";
+import { LfgManager } from "../../lfg/lfg-manager.js";
+import { RegularLfgThread } from "../../db/entity/lfg-thread.js";
+import { LfgUserManager } from "../../lfg/lfg-user-manager.js";
+import { LfgMessageManager } from "../../lfg/lfg-message-manager.js";
+import LfgThreadManager from "../../lfg/lfg-thread-manager.js";
 
 const doCreate: LfgSubCommandExecutor = async (interaction: ChatInputCommandInteraction) => {
     const locale = getLocale(interaction.locale);

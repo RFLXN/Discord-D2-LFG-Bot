@@ -1,5 +1,5 @@
 import { AutocompleteInteraction } from "discord.js";
-import { LfgManager } from "../lfg/lfg-manager";
+import { LfgManager } from "../lfg/lfg-manager.js";
 
 const doLfgAutoComplete = async (interaction: AutocompleteInteraction) => {
     await interaction.respond(LfgManager.instance.getAllNormalLfg()

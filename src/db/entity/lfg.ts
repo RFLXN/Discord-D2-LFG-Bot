@@ -1,9 +1,9 @@
 import {
     Column, Entity, OneToMany, PrimaryGeneratedColumn
 } from "typeorm";
-import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "./lfg-user";
-import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "./lfg-thread";
-import { LongTermLfgMessage, NormalLfgMessage, RegularLfgMessage } from "./lfg-message";
+import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "./lfg-user.js";
+import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "./lfg-thread.js";
+import { LongTermLfgMessage, NormalLfgMessage, RegularLfgMessage } from "./lfg-message.js";
 
 abstract class BaseLfg {
     @PrimaryGeneratedColumn("increment", {

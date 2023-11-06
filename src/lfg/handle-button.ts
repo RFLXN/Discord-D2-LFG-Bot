@@ -1,14 +1,14 @@
 import { ButtonInteraction } from "discord.js";
-import { LfgUserManager } from "./lfg-user-manager";
+import { LfgUserManager } from "./lfg-user-manager.js";
 import {
     LongTermLfgUserCreateOption,
     NormalLfgUserCreateOption,
     RegularLfgUserCreateOption
-} from "../type/LfgUserCreateOption";
-import { getLocale } from "../command/lfg/share";
-import { getLocalizedString } from "./locale-map";
-import LfgThreadManager from "./lfg-thread-manager";
-import { LfgMessageManager } from "./lfg-message-manager";
+} from "../type/LfgUserCreateOption.js";
+import { getLocale } from "../command/lfg/share.js";
+import { getLocalizedString } from "./locale-map.js";
+import LfgThreadManager from "./lfg-thread-manager.js";
+import { LfgMessageManager } from "./lfg-message-manager.js";
 
 type LfgAction = "join" | "alter" | "leave";
 type LfgType = "normal" | "longterm" | "regular";

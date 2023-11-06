@@ -3,20 +3,20 @@ import {
 } from "discord.js";
 import { LocaleString } from "discord-api-types/v10";
 import { APIEmbed } from "discord-api-types/v9";
-import { EventTypes, TypedEventEmitter } from "../util/event-emitter";
-import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
-import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "../db/entity/lfg-user";
-import { getLocalizedString, getStrings } from "./locale-map";
-import { getLocale } from "../command/lfg/share";
-import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "../db/entity/lfg-thread";
-import { LongTermLfgMessage, NormalLfgMessage, RegularLfgMessage } from "../db/entity/lfg-message";
-import { getRepository } from "../db/typeorm";
-import LfgMessageCreateOption from "../type/LfgMessageCreateOption";
-import { getActivityMap } from "./activity-map";
-import client from "../main";
-import { LfgUserManager } from "./lfg-user-manager";
-import { LfgManager } from "./lfg-manager";
-import LfgThreadManager from "./lfg-thread-manager";
+import { EventTypes, TypedEventEmitter } from "../util/event-emitter.js";
+import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg.js";
+import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "../db/entity/lfg-user.js";
+import { getLocalizedString, getStrings } from "./locale-map.js";
+import { getLocale } from "../command/lfg/share.js";
+import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "../db/entity/lfg-thread.js";
+import { LongTermLfgMessage, NormalLfgMessage, RegularLfgMessage } from "../db/entity/lfg-message.js";
+import { getRepository } from "../db/typeorm.js";
+import LfgMessageCreateOption from "../type/LfgMessageCreateOption.js";
+import { getActivityMap } from "./activity-map.js";
+import client from "../main.js";
+import { LfgUserManager } from "./lfg-user-manager.js";
+import { LfgManager } from "./lfg-manager.js";
+import LfgThreadManager from "./lfg-thread-manager.js";
 
 interface LfgMessageEvents extends EventTypes {
     newNormalMessage: [];

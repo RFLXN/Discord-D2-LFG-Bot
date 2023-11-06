@@ -2,10 +2,10 @@ import {
     Client, Events, IntentsBitField, REST
 } from "discord.js";
 
-import { onInteractionCreate, onReady } from "./client-event-handler";
-import { applyOwner, applyToken, getInfo } from "./bot-info";
-import readline from "./util/readline";
-import { disconnectDB } from "./db/typeorm";
+import { onInteractionCreate, onReady } from "./client-event-handler.js";
+import { applyOwner, applyToken, getInfo } from "./bot-info.js";
+import readline from "./util/readline.js";
+import { disconnectDB } from "./db/typeorm.js";
 
 console.log("Starting Destiny 2 LFG Discord Bot...");
 

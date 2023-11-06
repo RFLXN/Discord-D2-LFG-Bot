@@ -1,7 +1,7 @@
 import {
     Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Relation
 } from "typeorm";
-import { LongTermLfg, NormalLfg, RegularLfg } from "./lfg";
+import { LongTermLfg, NormalLfg, RegularLfg } from "./lfg.js";
 
 class LfgThread {
     @PrimaryGeneratedColumn("increment", {

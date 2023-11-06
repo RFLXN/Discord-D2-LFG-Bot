@@ -1,7 +1,7 @@
 import {
     Check, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation
 } from "typeorm";
-import { LongTermLfg, NormalLfg, RegularLfg } from "./lfg";
+import { LongTermLfg, NormalLfg, RegularLfg } from "./lfg.js";
 
 @Check("\"STATE\" = 'JOIN' OR \"STATE\" = 'ALTER'  OR \"STATE\" = 'CREATOR'")
 class LfgUser {

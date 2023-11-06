@@ -1,9 +1,9 @@
-import { LongTermLfg, NormalLfg } from "../db/entity/lfg";
-import AlertedLfg from "../type/AlertedLfg";
-import { LfgManager } from "./lfg-manager";
-import LfgThreadManager from "./lfg-thread-manager";
-import { LfgUserManager } from "./lfg-user-manager";
-import { LongTermLfgUser, NormalLfgUser } from "../db/entity/lfg-user";
+import { LongTermLfg, NormalLfg } from "../db/entity/lfg.js";
+import AlertedLfg from "../type/AlertedLfg.js";
+import { LfgManager } from "./lfg-manager.js";
+import LfgThreadManager from "./lfg-thread-manager.js";
+import { LfgUserManager } from "./lfg-user-manager.js";
+import { LongTermLfgUser, NormalLfgUser } from "../db/entity/lfg-user.js";
 
 let alertedList: AlertedLfg[] = [];
 

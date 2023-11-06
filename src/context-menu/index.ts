@@ -1,5 +1,5 @@
-import { doRegularLfgStart, regularLfgStart } from "./regular-lfg-start";
-import MessageContextMenuIndex from "../type/MessasgeContextMenuIndex";
+import { doRegularLfgStart, regularLfgStart } from "./regular-lfg-start.js";
+import MessageContextMenuIndex from "../type/MessasgeContextMenuIndex.js";
 
 const index: MessageContextMenuIndex[] = [
     {

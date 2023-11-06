@@ -13,11 +13,11 @@ import {
     TextInputStyle
 } from "discord.js";
 import { LocaleString } from "discord-api-types/v10";
-import moment from "moment/moment";
-import { getLocalizedString } from "../../lfg/locale-map";
-import { LfgLocaleMap } from "../../type/LfgLocaleMap";
-import { getActivityMap } from "../../lfg/activity-map";
-import { isAdmin } from "../../bot-admin";
+import moment from "moment";
+import { getLocalizedString } from "../../lfg/locale-map.js";
+import { LfgLocaleMap } from "../../type/LfgLocaleMap.js";
+import { getActivityMap } from "../../lfg/activity-map.js";
+import { isAdmin } from "../../bot-admin.js";
 
 const getLocale = (locale?: LocaleString): keyof LfgLocaleMap => {
     if (!locale || locale == "en-US") return "default";

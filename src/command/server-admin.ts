@@ -5,11 +5,11 @@ import {
     PermissionsBitField
 } from "discord.js";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
-import AdminCommand from "../type/AdminCommand";
-import { addStarter, deleteStarter } from "../lfg/regular-lfg-starter";
-import { overrideGuildCommands } from "../command-rest-api";
-import client, { rest } from "../main";
-import { addServerConfig } from "../lfg/server-config";
+import AdminCommand from "../type/AdminCommand.js";
+import { addStarter, deleteStarter } from "../lfg/regular-lfg-starter.js";
+import { overrideGuildCommands } from "../command-rest-api.js";
+import client, { rest } from "../main.js";
+import { addServerConfig } from "../lfg/server-config.js";
 
 const serverAdminCommands: AdminCommand[] = [
     {

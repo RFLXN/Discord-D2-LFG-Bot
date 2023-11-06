@@ -3,11 +3,11 @@ import {
     LongTermLfgCreateOption,
     NormalLfgCreateOption,
     RegularLfgCreateOption
-} from "../type/LfgCreateOption";
-import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
-import { getQueryBuilder, getRepository } from "../db/typeorm";
-import { EventTypes, TypedEventEmitter } from "../util/event-emitter";
-import omitProperty from "../util/omit-property";
+} from "../type/LfgCreateOption.js";
+import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg.js";
+import { getQueryBuilder, getRepository } from "../db/typeorm.js";
+import { EventTypes, TypedEventEmitter } from "../util/event-emitter.js";
+import omitProperty from "../util/omit-property.js";
 
 interface LfgEvents extends EventTypes {
     NEW_NORMAL_LFG: [creator: LfgCreator, lfg: NormalLfg];

@@ -2,8 +2,8 @@ import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 import { promises as fs } from "fs";
 import { Validator } from "jsonschema";
-import loadJson from "../util/loadJson";
-import LfgActivityMap from "../type/LfgActivityMap";
+import loadJson from "../util/loadJson.js";
+import LfgActivityMap from "../type/LfgActivityMap.js";
 
 const DIR_NAME = dirname(fileURLToPath(import.meta.url));
 const MAP_FILE_PATH = resolve(DIR_NAME, "../../resource/lfg-activity-map.json");

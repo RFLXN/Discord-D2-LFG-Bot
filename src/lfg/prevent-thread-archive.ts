@@ -1,5 +1,5 @@
-import { LfgManager } from "./lfg-manager";
-import LfgThreadManager from "./lfg-thread-manager";
+import { LfgManager } from "./lfg-manager.js";
+import LfgThreadManager from "./lfg-thread-manager.js";
 
 const preventThreadArchive = async () => {
     console.log("Send Messages for Prevent Thread Archiving...");

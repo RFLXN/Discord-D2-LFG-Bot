@@ -1,11 +1,11 @@
-import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "../db/entity/lfg-user";
-import { getRepository } from "../db/typeorm";
+import { LongTermLfgUser, NormalLfgUser, RegularLfgUser } from "../db/entity/lfg-user.js";
+import { getRepository } from "../db/typeorm.js";
 import {
     LongTermLfgUserCreateOption,
     NormalLfgUserCreateOption,
     RegularLfgUserCreateOption
-} from "../type/LfgUserCreateOption";
-import { EventTypes, TypedEventEmitter } from "../util/event-emitter";
+} from "../type/LfgUserCreateOption.js";
+import { EventTypes, TypedEventEmitter } from "../util/event-emitter.js";
 
 interface LfgUserEvents extends EventTypes {
     NORMAL_LFG_CREATOR: [user: NormalLfgUser];

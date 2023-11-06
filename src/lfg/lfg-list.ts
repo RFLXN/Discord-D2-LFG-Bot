@@ -1,10 +1,10 @@
 import { EmbedBuilder, TextChannel } from "discord.js";
-import { LfgManager } from "./lfg-manager";
-import { getLfgServerConfig } from "./server-config";
-import client from "../main";
-import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
-import { getLocalizedString } from "./locale-map";
-import LfgThreadManager from "./lfg-thread-manager";
+import { LfgManager } from "./lfg-manager.js";
+import { getLfgServerConfig } from "./server-config.js";
+import client from "../main.js";
+import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg.js";
+import { getLocalizedString } from "./locale-map.js";
+import LfgThreadManager from "./lfg-thread-manager.js";
 
 type LFG = NormalLfg | LongTermLfg | RegularLfg;
 

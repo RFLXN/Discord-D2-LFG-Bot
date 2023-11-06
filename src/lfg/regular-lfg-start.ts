@@ -1,11 +1,11 @@
 import { EmbedBuilder } from "discord.js";
-import { LfgManager } from "./lfg-manager";
-import { LfgUserManager } from "./lfg-user-manager";
-import { RegularLfgUser } from "../db/entity/lfg-user";
-import { RegularLfg } from "../db/entity/lfg";
-import { LfgLocaleMap } from "../type/LfgLocaleMap";
-import { getLocalizedString } from "./locale-map";
-import LfgThreadManager from "./lfg-thread-manager";
+import { LfgManager } from "./lfg-manager.js";
+import { LfgUserManager } from "./lfg-user-manager.js";
+import { RegularLfgUser } from "../db/entity/lfg-user.js";
+import { RegularLfg } from "../db/entity/lfg.js";
+import { LfgLocaleMap } from "../type/LfgLocaleMap.js";
+import { getLocalizedString } from "./locale-map.js";
+import LfgThreadManager from "./lfg-thread-manager.js";
 
 const createEmbed = (lfg: RegularLfg, users: RegularLfgUser[], locale: keyof LfgLocaleMap) => {
     const embed = new EmbedBuilder();

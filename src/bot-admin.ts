@@ -1,6 +1,6 @@
-import { getQueryBuilder, getRepository } from "./db/typeorm";
-import { BotAdmin } from "./db/entity/bot-admin";
-import { getInfo } from "./bot-info";
+import { getQueryBuilder, getRepository } from "./db/typeorm.js";
+import { BotAdmin } from "./db/entity/bot-admin.js";
+import { getInfo } from "./bot-info.js";
 
 const getBotAdmins = async (): Promise<BotAdmin[]> => {
     console.log("Querying All Bot Administrators.");

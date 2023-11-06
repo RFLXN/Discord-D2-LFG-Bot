@@ -1,6 +1,6 @@
 import { DataSource, Repository, SelectQueryBuilder } from "typeorm";
-import { DB_FILE_PATH } from "./sqlite";
-import index from "./entity";
+import { DB_FILE_PATH } from "./sqlite.js";
+import index from "./entity/index.js";
 
 let db: undefined | DataSource;
 

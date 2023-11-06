@@ -1,7 +1,7 @@
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
-import { LfgLocaleMap, LfgLocaleMapElements } from "../type/LfgLocaleMap";
-import loadJson from "../util/loadJson";
+import { LfgLocaleMap, LfgLocaleMapElements } from "../type/LfgLocaleMap.js";
+import loadJson from "../util/loadJson.js";
 
 const DIR_NAME = dirname(fileURLToPath(import.meta.url));
 const MAP_FILE_PATH = resolve(DIR_NAME, "../../resource/lfg-locale-map.json");

@@ -1,5 +1,5 @@
 import { REST, Routes } from "discord.js";
-import CommandBuilder from "./type/CommandBuilder";
+import CommandBuilder from "./type/CommandBuilder.js";
 
 const registerGuildCommands = async (
     rest: REST,

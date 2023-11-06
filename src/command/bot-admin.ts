@@ -1,8 +1,8 @@
 import { ChatInputApplicationCommandData, ChatInputCommandInteraction } from "discord.js";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
-import AdminCommand from "../type/AdminCommand";
-import { deleteBotAdmin, insertBotAdmin, isAdmin } from "../bot-admin";
-import { overrideActivityMap } from "../lfg/activity-map";
+import AdminCommand from "../type/AdminCommand.js";
+import { deleteBotAdmin, insertBotAdmin, isAdmin } from "../bot-admin.js";
+import { overrideActivityMap } from "../lfg/activity-map.js";
 
 const botAdminCommands: AdminCommand[] = [
     {

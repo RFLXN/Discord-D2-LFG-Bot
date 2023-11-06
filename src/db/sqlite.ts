@@ -2,8 +2,8 @@ import { dirname, resolve as pathResolve } from "path";
 import { fileURLToPath } from "url";
 import { promises as fs } from "fs";
 import sqlite3Pkg from "sqlite3";
-import { isFileExist } from "../util/file";
-import loadJson from "../util/loadJson";
+import { isFileExist } from "../util/file.js";
+import loadJson from "../util/loadJson.js";
 
 const sqlite3 = sqlite3Pkg.verbose();
 type Database = sqlite3Pkg.Database;

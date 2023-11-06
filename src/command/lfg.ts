@@ -1,11 +1,11 @@
 import { ChatInputApplicationCommandData, ChatInputCommandInteraction } from "discord.js";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
-import normalLfgExecutors from "./lfg/normal-lfg";
-import longTermLfgExecutors from "./lfg/long-term-lfg";
-import regularLfgExecutors from "./lfg/regular-lfg";
-import { getLfgServerConfig } from "../lfg/server-config";
-import { getLocalizedString } from "../lfg/locale-map";
-import { getLocale } from "./lfg/share";
+import normalLfgExecutors from "./lfg/normal-lfg.js";
+import longTermLfgExecutors from "./lfg/long-term-lfg.js";
+import regularLfgExecutors from "./lfg/regular-lfg.js";
+import { getLfgServerConfig } from "../lfg/server-config.js";
+import { getLocalizedString } from "../lfg/locale-map.js";
+import { getLocale } from "./lfg/share.js";
 
 const normalLfg: ChatInputApplicationCommandData = {
     name: "lfg",

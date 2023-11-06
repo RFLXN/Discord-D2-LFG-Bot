@@ -1,6 +1,6 @@
 import { ChatInputApplicationCommandData, ChatInputCommandInteraction } from "discord.js";
 
-const GITHUB_URL = "https://github.com/jhchoi123/Discord-D2-LFG-Bot";
+const GITHUB_URL = "https://github.com/RFLXN/Discord-D2-LFG-Bot";
 
 const github: ChatInputApplicationCommandData = {
     name: "github",

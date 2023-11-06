@@ -1,5 +1,5 @@
-import { ServerLfgConfig } from "../db/entity/server-lfg-config";
-import { getRepository } from "../db/typeorm";
+import { ServerLfgConfig } from "../db/entity/server-lfg-config.js";
+import { getRepository } from "../db/typeorm.js";
 
 let configs: ServerLfgConfig[] = [];
 

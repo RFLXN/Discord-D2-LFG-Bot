@@ -1,4 +1,4 @@
-interface BotInfo {
+export interface BotInfo {
     token: string;
     owner: string;
 }

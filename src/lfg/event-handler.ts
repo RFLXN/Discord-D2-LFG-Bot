@@ -1,10 +1,10 @@
-import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
-import { LfgCreator } from "../type/LfgCreateOption";
-import { LfgUserManager } from "./lfg-user-manager";
-import { LfgManager } from "./lfg-manager";
-import LfgThreadManager from "./lfg-thread-manager";
-import { LfgMessageManager } from "./lfg-message-manager";
-import refreshLfgList from "./lfg-list";
+import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg.js";
+import { LfgCreator } from "../type/LfgCreateOption.js";
+import { LfgUserManager } from "./lfg-user-manager.js";
+import { LfgManager } from "./lfg-manager.js";
+import LfgThreadManager from "./lfg-thread-manager.js";
+import { LfgMessageManager } from "./lfg-message-manager.js";
+import refreshLfgList from "./lfg-list.js";
 
 const newNormalLfgHandler = async (creator: LfgCreator, lfg: NormalLfg) => {
     console.log(`Normal LFG Created: ${lfg.id}`);

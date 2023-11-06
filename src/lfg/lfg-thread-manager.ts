@@ -1,12 +1,12 @@
 import { TextChannel, ThreadAutoArchiveDuration, ThreadChannel } from "discord.js";
-import { EventTypes, TypedEventEmitter } from "../util/event-emitter";
-import { LfgManager } from "./lfg-manager";
-import { getLfgServerConfig } from "./server-config";
-import client from "../main";
-import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg";
-import { getRepository } from "../db/typeorm";
-import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "../db/entity/lfg-thread";
-import { LfgUserManager } from "./lfg-user-manager";
+import { EventTypes, TypedEventEmitter } from "../util/event-emitter.js";
+import { LfgManager } from "./lfg-manager.js";
+import { getLfgServerConfig } from "./server-config.js";
+import client from "../main.js";
+import { LongTermLfg, NormalLfg, RegularLfg } from "../db/entity/lfg.js";
+import { getRepository } from "../db/typeorm.js";
+import { LongTermLfgThread, NormalLfgThread, RegularLfgThread } from "../db/entity/lfg-thread.js";
+import { LfgUserManager } from "./lfg-user-manager.js";
 
 interface LfgThreadEvents extends EventTypes {
     newNormalThread: [entity: NormalLfgThread, real: ThreadChannel];

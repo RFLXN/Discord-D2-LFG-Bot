@@ -1,10 +1,10 @@
 import { ApplicationCommandType, ContextMenuCommandBuilder, MessageContextMenuCommandInteraction } from "discord.js";
-import { getLocale } from "../command/lfg/share";
-import { getLocalizedString, getStrings } from "../lfg/locale-map";
-import { LfgManager } from "../lfg/lfg-manager";
-import { isStarter } from "../lfg/regular-lfg-starter";
-import { LfgUserManager } from "../lfg/lfg-user-manager";
-import startRegularLfg from "../lfg/regular-lfg-start";
+import { getLocale } from "../command/lfg/share.js";
+import { getLocalizedString, getStrings } from "../lfg/locale-map.js";
+import { LfgManager } from "../lfg/lfg-manager.js";
+import { isStarter } from "../lfg/regular-lfg-starter.js";
+import { LfgUserManager } from "../lfg/lfg-user-manager.js";
+import startRegularLfg from "../lfg/regular-lfg-start.js";
 
 const regularLfgStart = new ContextMenuCommandBuilder()
     .setName("regular-lfg-start")

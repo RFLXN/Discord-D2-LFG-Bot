@@ -1,6 +1,6 @@
-import { LfgManager } from "./lfg-manager";
-import { getLfgServerConfig } from "./server-config";
-import { LongTermLfg, NormalLfg } from "../db/entity/lfg";
+import { LfgManager } from "./lfg-manager.js";
+import { getLfgServerConfig } from "./server-config.js";
+import { LongTermLfg, NormalLfg } from "../db/entity/lfg.js";
 
 const filterExpired = (lfgList: (NormalLfg | LongTermLfg)[]) => lfgList.filter((lfg) => {
     const delay = getLfgServerConfig(lfg.guildID).expiredLfgDeleteDelay;

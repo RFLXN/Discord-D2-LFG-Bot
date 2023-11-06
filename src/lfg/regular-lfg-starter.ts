@@ -1,5 +1,5 @@
-import RegularLfgStarter from "../db/entity/regular-lfg-starter";
-import { getQueryBuilder, getRepository } from "../db/typeorm";
+import RegularLfgStarter from "../db/entity/regular-lfg-starter.js";
+import { getQueryBuilder, getRepository } from "../db/typeorm.js";
 
 let starters: RegularLfgStarter[] = [];
 

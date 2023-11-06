@@ -1,8 +1,8 @@
 import { Client, REST } from "discord.js";
-import { overrideGlobalCommands } from "./command-rest-api";
-import commandIndex from "./command";
-import messageContextMenuIndex from "./context-menu";
-import CommandBuilder from "./type/CommandBuilder";
+import { overrideGlobalCommands } from "./command-rest-api.js";
+import commandIndex from "./command/index.js";
+import messageContextMenuIndex from "./context-menu/index.js";
+import CommandBuilder from "./type/CommandBuilder.js";
 
 const registerCommands = async (client: Client, rest: REST) => {
     console.log("Registering Global Commands...");
