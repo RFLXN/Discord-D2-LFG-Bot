@@ -87,7 +87,14 @@
     "name": "Raid - Crota’s End",
     "localizationName": {
       "ko": "레이드 - 크로타의 최후",
-      "ja": "レイト - クロタの最期"
+      "ja": "レイド - クロタの最期"
+    }
+  },
+  {
+    "name": "Raid - Salvation's Edge",
+    "localizationName": {
+      "ko": "레이드 - 구원의 경계",
+      "ja": "レイド - 救済の境界"
     }
   },
   {
