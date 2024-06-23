@@ -147,6 +147,13 @@
     }
   },
   {
+    "name": "Dungeon - Warlord's Ruin",
+    "localizationName": {
+      "ko": "던전 - 전쟁군주의 폐허",
+      "ja": "ダンジョン - ウォーロードの旧跡"
+    }
+  },
+  {
     "name": "Others (Type in Description)",
     "localizationName": {
       "ko": "기타 (설명에 써주세요)",
